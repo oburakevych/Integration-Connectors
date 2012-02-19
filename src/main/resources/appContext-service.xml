@@ -35,12 +35,6 @@
 		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
 	</bean>
 
-    <bean id="pollingService" class="org.integration.payments.server.polling.PollingService">
-        <property name="userProfileDao" ref="userProfileDao" />
-        <property name="userFeedbackDao" ref="userFeedbackDao" />
-        <property name="pluginUsageInfoDao" ref="pluginUsageInfoDao" />
-    </bean>
-    
    	<bean id="fsConnectorService" class="org.integration.connectors.filesystem.FileSystemConnectorService" >
 		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
 	</bean>

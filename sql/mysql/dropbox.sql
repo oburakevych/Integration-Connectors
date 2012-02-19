@@ -1,4 +1,4 @@
-use `polling`;
+use `connector`;
 
 CREATE TABLE dropbox_account (
   id VARCHAR(40) NOT NULL PRIMARY KEY,

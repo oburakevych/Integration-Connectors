@@ -22,8 +22,4 @@
 	
 	<sqlMap resource="ibatis/tradeshift/tradeshiftAccount.xml" />
 	<sqlMap resource="ibatis/tradeshift/tradeshiftAccessToken.xml" />
-
-    <sqlMap resource="ibatis/feedback/userProfile.xml" />
-    <sqlMap resource="ibatis/feedback/userFeedback.xml" />
-    <sqlMap resource="ibatis/feedback/pluginUsageInfo.xml" />
 </sqlMapConfig>

@@ -1,4 +1,4 @@
-use `polling`;
+use `connector`;
 
 CREATE TABLE dropbox_tradeshift_connector (
   id VARCHAR(40) PRIMARY KEY,

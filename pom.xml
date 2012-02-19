@@ -3,12 +3,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.integration.payments.service</groupId>
-    <artifactId>payments-service</artifactId>
+    <groupId>org.integration.connectors</groupId>
+    <name>Connector-Service</name>
     <version>1.0-SNAPSHOT</version>
+    <artifactId>connector</artifactId>
     <packaging>war</packaging>
 
-    <name>payments-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>

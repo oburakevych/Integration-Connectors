@@ -1,4 +1,6 @@
-use `polling`;
+CREATE DATABASE `connector` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+
+use `connector`;
 
 CREATE TABLE tradeshift_account (
   id VARCHAR(40) NOT NULL PRIMARY KEY,
