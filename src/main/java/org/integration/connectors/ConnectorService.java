@@ -5,8 +5,8 @@ import java.util.UUID;
 import org.integration.account.Account;
 import org.integration.connectors.documentfiles.DocumentFileList;
 import org.integration.connectors.documentfiles.DocumentFileState;
-import org.integration.payments.server.document.Dispatch;
-import org.integration.payments.server.ws.tradeshift.TradeshiftApiService;
+import org.integration.connectors.tradeshift.document.Dispatch;
+import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
 
 
 public abstract class ConnectorService {

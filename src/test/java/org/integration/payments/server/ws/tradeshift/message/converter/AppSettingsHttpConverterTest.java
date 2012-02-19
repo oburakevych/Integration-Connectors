@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.integration.connectors.tradeshift.appsettings.AppSettings;
+import org.integration.connectors.tradeshift.appsettings.AppSettingsHttpConverter;
 import org.integration.payments.server.mock.MockHttpInputMessage;
-import org.integration.payments.server.ws.tradeshift.dto.AppSettings;
-import org.integration.payments.server.ws.tradeshift.message.converter.AppSettingsHttpConverter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

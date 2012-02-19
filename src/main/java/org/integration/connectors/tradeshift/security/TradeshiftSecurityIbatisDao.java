@@ -1,7 +1,7 @@
 package org.integration.connectors.tradeshift.security;
 
-import org.integration.connectors.AccessToken;
-import org.integration.payments.server.ws.auth.SecurityDao;
+import org.integration.auth.AccessToken;
+import org.integration.auth.SecurityDao;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 public class TradeshiftSecurityIbatisDao extends SqlMapClientDaoSupport implements SecurityDao {

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-import org.integration.connectors.AccessToken;
+import org.integration.auth.AccessToken;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.account.TradeshiftAccountService;
 import org.junit.Before;

@@ -1,8 +1,7 @@
 package org.integration.connectors.dropbox.security;
 
-import org.integration.connectors.AccessToken;
-import org.integration.connectors.SecurityService;
-import org.integration.payments.server.ws.dropbox.auth.DropboxOAuth1AuthorizationManager;
+import org.integration.auth.AccessToken;
+import org.integration.auth.SecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

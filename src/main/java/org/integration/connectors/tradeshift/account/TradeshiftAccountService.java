@@ -1,6 +1,6 @@
 package org.integration.connectors.tradeshift.account;
 
-import org.integration.payments.server.ws.tradeshift.TradeshiftApiService;
+import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

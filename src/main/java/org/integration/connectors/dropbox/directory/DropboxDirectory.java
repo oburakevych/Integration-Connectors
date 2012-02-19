@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.integration.connectors.dropbox.files.Entry;
-import org.integration.payments.server.util.DateUtils;
+import org.integration.util.DateUtils;
 
 public class DropboxDirectory {
     private UUID id;

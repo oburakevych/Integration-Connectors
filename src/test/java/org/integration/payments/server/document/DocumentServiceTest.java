@@ -10,8 +10,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.integration.payments.server.document.ubl.canonical.Canonical;
-import org.integration.payments.server.util.IOUtils;
+import org.integration.connectors.tradeshift.document.DocumentService;
+import org.integration.connectors.tradeshift.document.Invoice;
+import org.integration.connectors.tradeshift.document.ubl.canonical.Canonical;
+import org.integration.util.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

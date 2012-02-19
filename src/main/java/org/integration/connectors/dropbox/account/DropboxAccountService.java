@@ -3,7 +3,7 @@ package org.integration.connectors.dropbox.account;
 import java.util.List;
 
 import org.integration.account.Account;
-import org.integration.payments.server.ws.dropbox.DropboxApiService;
+import org.integration.connectors.dropbox.ws.DropboxApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

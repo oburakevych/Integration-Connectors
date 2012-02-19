@@ -6,7 +6,7 @@ import org.integration.connectors.documentfiles.DocumentFileList;
 import org.integration.connectors.dropbox.TradeshiftConnectorService;
 import org.integration.connectors.dropbox.exception.DropboxException;
 import org.integration.connectors.process.Executor;
-import org.integration.payments.server.document.Dispatch;
+import org.integration.connectors.tradeshift.document.Dispatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;

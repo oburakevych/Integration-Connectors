@@ -7,7 +7,7 @@ import org.integration.connectors.dropbox.account.DropboxAccountService;
 import org.integration.connectors.dropbox.files.DropboxFileService;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.account.TradeshiftAccountService;
-import org.integration.payments.server.document.DocumentService;
+import org.integration.connectors.tradeshift.document.DocumentService;
 
 public class TradeshiftConnectorService extends ConnectorService {
     private TradeshiftAccountService masterAccountService;

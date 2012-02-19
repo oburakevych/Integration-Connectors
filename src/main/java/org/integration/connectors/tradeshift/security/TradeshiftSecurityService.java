@@ -1,8 +1,8 @@
 package org.integration.connectors.tradeshift.security;
 
-import org.integration.connectors.AccessToken;
-import org.integration.connectors.SecurityService;
-import org.integration.payments.server.ws.auth.CredentialsStorage;
+import org.integration.auth.AccessToken;
+import org.integration.auth.CredentialsStorage;
+import org.integration.auth.SecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -28,14 +28,10 @@
      	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
      </bean>
 
-	<bean id="documentFactory" class="org.integration.payments.server.document.DocumentFactory" />
+	<bean id="documentFactory" class="org.integration.connectors.tradeshift.document.DocumentFactory" />
 
-	<bean id="documentService" class="org.integration.payments.server.document.DocumentService" >
+	<bean id="documentService" class="org.integration.connectors.tradeshift.document.DocumentService" >
 		<property name="documentFactory" ref="documentFactory"/>
-		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
-	</bean>
-
-   	<bean id="fsConnectorService" class="org.integration.connectors.filesystem.FileSystemConnectorService" >
 		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
 	</bean>
 	

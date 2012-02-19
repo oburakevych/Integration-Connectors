@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.integration.connectors.documentfiles.DocumentFileList;
-import org.integration.payments.server.document.Dispatch;
-import org.integration.payments.server.document.DocumentMetadata;
+import org.integration.connectors.tradeshift.appsettings.AppSettings;
+import org.integration.connectors.tradeshift.document.Dispatch;
+import org.integration.connectors.tradeshift.document.DocumentMetadata;
+import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
 import org.integration.payments.server.document.DocumentServiceTest;
-import org.integration.payments.server.util.IOUtils;
-import org.integration.payments.server.ws.tradeshift.TradeshiftApiService;
-import org.integration.payments.server.ws.tradeshift.dto.AppSettings;
+import org.integration.util.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

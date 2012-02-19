@@ -1,6 +1,6 @@
 package org.integration.connectors;
 
-import org.integration.payments.server.ws.dropbox.auth.DropboxOAuth1AuthorizationManager;
+import org.integration.connectors.dropbox.security.DropboxOAuth1AuthorizationManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

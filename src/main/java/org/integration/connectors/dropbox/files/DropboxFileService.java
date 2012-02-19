@@ -1,6 +1,6 @@
 package org.integration.connectors.dropbox.files;
 
-import org.integration.payments.server.ws.dropbox.DropboxApiService;
+import org.integration.connectors.dropbox.ws.DropboxApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
