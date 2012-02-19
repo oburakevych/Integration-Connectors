@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<!-- 
+    <settings lazyLoadingEnabled="false" 
+        enhancementEnabled="false" 
+        useStatementNamespaces="false" 
+        useColumnLabel="true" 
+        cacheModelsEnabled="true" 
+        statementCachingEnabled="true"/>
+    -->
+	<settings lazyLoadingEnabled="false" useStatementNamespaces="true" statementCachingEnabled="true" />
+
+    <typeAlias alias="UUID" type="java.util.UUID" />
+    <typeHandler javaType="UUID" callback="org.integration.payments.server.dao.impl.ibatis.UUIDTypeHandler"/>
+	
+	<sqlMap resource="ibatis/dropbox/dropboxAccount.xml" />
+	<sqlMap resource="ibatis/dropbox/dropboxDirectory.xml" />
+	<sqlMap resource="ibatis/dropbox/dropboxAccessToken.xml" />
+	
+	<sqlMap resource="ibatis/tradeshift/tradeshiftAccount.xml" />
+	<sqlMap resource="ibatis/tradeshift/tradeshiftAccessToken.xml" />
+
+    <sqlMap resource="ibatis/feedback/userProfile.xml" />
+    <sqlMap resource="ibatis/feedback/userFeedback.xml" />
+    <sqlMap resource="ibatis/feedback/pluginUsageInfo.xml" />
+</sqlMapConfig>

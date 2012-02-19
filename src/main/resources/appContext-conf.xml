@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="configurationFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:comp/env/configurationFactory" />
+		<property name="defaultObject" ref="defaultConfigurationFactory" />
+	</bean>
+
+	<bean id="defaultConfigurationFactory" class="org.apache.commons.configuration.ConfigurationFactory">
+		<property name="configurationFileName" value="classpath:/config.xml" />
+	</bean>
+
+	<bean id="conf1" factory-bean="configurationFactory" factory-method="getConfiguration" />
+
+	<bean id="configurations" class="org.springmodules.commons.configuration.CommonsConfigurationFactoryBean">
+		<property name="configurations">
+			<list>
+				<ref bean="conf1" />
+			</list>
+		</property>
+	</bean>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="configurations" />
+        <!--
+        <property name="locations">
+            <list>
+                <value>classpath:internal-app.properties</value>
+            </list>
+        </property>
+        -->
+        <property name="localOverride" value="true" />
+    </bean>
+
+	<bean id="log4jInitialization" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass" value="org.apache.log4j.PropertyConfigurator" />
+        <property name="targetMethod" value="configure" />
+        <property name="arguments">
+            <list>
+                <ref bean="configurations" /> 
+            </list>
+        </property>
+    </bean>
+</beans>

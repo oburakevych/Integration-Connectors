@@ -1,0 +1,2 @@
+insert into tradeshift_access_token values('10ef0b35-7f42-42d0-a9e3-c2e4e7c4e504', 'EFRpZSSNre9hkaV7UzJtwgee7h2jU9', '+DUgJym4635nR48+Dyrmn6qxtGhjFPyjb-8dakG9', 'OwnAccount', Now());
+insert into dropbox_access_token values('10ef0b35-7f42-42d0-a9e3-c2e4e7c4e504', 'gzfxqwiw9yq1csp', 'xz8mif19iucocyr', 'qp413bvaqakkyqh', Now());

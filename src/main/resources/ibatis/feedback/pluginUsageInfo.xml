@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PluginUsageInfo">
+    <typeAlias type="org.integration.payments.server.om.PluginUsageInfo" alias="PluginUsageInfo" />
+
+    <resultMap id="PluginUsageInfoMap" class="PluginUsageInfo">
+        <result property="companyAccountId" column="company_account_id" />
+        <result property="activated" column="activated" />
+        <result property="disabled" column="disabled" />
+    </resultMap>
+
+    <insert id="create" parameterClass="UUID">
+        INSERT INTO plugin_usage_info(company_account_id, activated) VALUES (#companyAccountId#, NOW())  
+    </insert>
+
+    <sql id="getInternal">
+        SELECT company_account_id, activated, disabled FROM plugin_usage_info
+    </sql>
+
+    <select id="get" parameterClass="UUID" resultMap="PluginUsageInfoMap">
+        <include refid="getInternal"/>
+        WHERE company_account_id = #companyAccountId#
+    </select>
+
+    <select id="getAll" resultMap="PluginUsageInfoMap">
+        <include refid="getInternal" />
+    </select>
+
+    <insert id="markActivated" parameterClass="UUID">
+        UPDATE plugin_usage_info
+        SET activated = NOW(),
+            disabled = NULL
+        WHERE company_account_id = #companyAccountId#    
+    </insert>
+
+    <update id="markDisabled" parameterClass="UUID">
+        UPDATE plugin_usage_info
+        SET disabled = NOW()
+        WHERE company_account_id = #companyAccountId#       
+    </update>
+
+    <delete id="delete" parameterClass="UUID">
+        DELETE FROM plugin_usage_info WHERE company_account_id = #companyAccountId#
+    </delete>
+
+</sqlMap>

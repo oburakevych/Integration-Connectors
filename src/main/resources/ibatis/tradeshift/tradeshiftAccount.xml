@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TradeshiftAccount">
+    <typeAlias type="org.integration.connectors.tradeshift.account.TradeshiftAccount" alias="TradeshiftAccount" />
+
+    <resultMap id="TradeshiftAccountMap" class="TradeshiftAccount">
+    	<result property="id" column="id" />
+        <result property="created" column="created" />
+        <result property="deactivated" column="deactivated" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="country" column="country" />
+        <result property="language" column="lang" />
+    </resultMap>
+    
+    <insert id="create" parameterClass="TradeshiftAccount">
+        INSERT INTO tradeshift_account(id, created, deactivated, name, email, country, lang) 
+        					VALUES (#id#, #created#, #deactivated#, #name#, #email#, #country#, #language#)
+    </insert>
+    
+    <update id="update" parameterClass="TradeshiftAccount">
+        UPDATE tradeshift_account
+        SET deactivated = #deactivated#, name = #name#, email = #email#, country = #country#, lang = #language#
+        WHERE id = #id#    
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM tradeshift_account
+    </sql>
+    
+    <select id="getAccount" parameterClass="String" resultMap="TradeshiftAccountMap">
+        <include refid="getInternal"/>
+        WHERE id = #id#
+    </select>
+</sqlMap>

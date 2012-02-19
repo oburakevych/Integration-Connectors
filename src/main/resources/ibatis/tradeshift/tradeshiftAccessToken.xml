@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TradeshiftAccessToken">
+    <typeAlias type="org.integration.connectors.AccessToken" alias="AccessToken" />
+
+    <cacheModel id="TradeshiftAccessTokenCache" type="LRU" readOnly="true">
+        <flushInterval hours="24"/>
+        <flushOnExecute statement="TradeshiftAccessToken.create"/>
+        <flushOnExecute statement="TradeshiftAccessToken.update"/>
+        <flushOnExecute statement="TradeshiftAccessToken.delete"/>
+        <property name="cache-size" value="1000"/>
+    </cacheModel>
+
+    <resultMap id="TradeshiftAccessTokenMap" class="AccessToken">
+    	<result property="accountId" column="account_id" />
+        <result property="value" column="value" />
+        <result property="secret" column="secret" />
+        <result property="consumerKey" column="consumer_key"/>
+        <result property="created" column="created" />
+    </resultMap>
+    
+    <insert id="create" parameterClass="AccessToken">
+        INSERT INTO tradeshift_access_token(account_id, value, secret, consumer_key, created) 
+        					VALUES (#accountId#, #value#, #secret#, #consumerKey#, #created#)
+    </insert>
+    
+    <update id="update" parameterClass="AccessToken">
+        UPDATE tradeshift_access_token
+        SET value = #value#, secret = #secret#, consumer_key = #consumerKey#
+        WHERE account_id = #accountId#    
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM tradeshift_access_token
+    </sql>
+    
+    <select id="get" parameterClass="String" resultMap="TradeshiftAccessTokenMap" cacheModel="TradeshiftAccessTokenCache">
+        <include refid="getInternal"/>
+        WHERE account_id = #accountId#
+    </select>
+
+    <select id="getAll" resultClass="java.lang.String">
+        SELECT account_id FROM tradeshift_access_token
+    </select>
+    
+	<delete id="delete" parameterClass="String">
+        DELETE FROM tradeshift_access_token WHERE account_id = #accountId#
+    </delete>
+
+</sqlMap>

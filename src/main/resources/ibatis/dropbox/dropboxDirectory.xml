@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DropboxDirectory">
+    <typeAlias type="org.integration.connectors.dropbox.directory.DropboxDirectory" alias="DropboxDirectory" />
+
+    <resultMap id="DropboxDirectoryMap" class="DropboxDirectory">
+    	<result property="id" column="id" />
+        <result property="accountId" column="account_id" />
+        <result property="directory" column="directory" />
+        <result property="hash" column="hash" />
+        <result property="modified" column="modified" />
+        <result property="lastCheck" column="lastCheck" />
+        <result property="isUpdated" column="is_updated" />
+    </resultMap>
+
+    <insert id="create" parameterClass="DropboxDirectory">
+        INSERT INTO dropbox_directory(id, account_id, directory, hash, modified, last_check, is_updated) 
+        					VALUES (#id#, #accountId#, #directory#, #hash#, #modified#, #lastCheck#, #isUpdated#)
+    </insert>
+
+</sqlMap>

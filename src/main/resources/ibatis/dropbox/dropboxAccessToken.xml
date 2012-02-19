@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DropboxAccessToken">
+    <typeAlias type="org.integration.connectors.AccessToken" alias="AccessToken" />
+
+    <cacheModel id="DropboxAccessTokenCache" type="LRU" readOnly="true">
+        <flushInterval hours="24"/>
+        <flushOnExecute statement="DropboxAccessToken.create"/>
+        <flushOnExecute statement="DropboxAccessToken.update"/>
+        <flushOnExecute statement="DropboxAccessToken.delete"/>
+        <property name="cache-size" value="1000"/>
+    </cacheModel>
+
+    <resultMap id="DropboxAccessTokenMap" class="AccessToken">
+    	<result property="accountId" column="account_id" />
+        <result property="value" column="value" />
+        <result property="secret" column="secret" />
+        <result property="consumerKey" column="consumer_key"/>
+        <result property="created" column="created" />
+    </resultMap>
+    
+    <insert id="create" parameterClass="AccessToken">
+        INSERT INTO dropbox_access_token(account_id, value, secret, consumer_key, created) 
+        					VALUES (#accountId#, #value#, #secret#, #consumerKey#, #created#)
+    </insert>
+    
+    <update id="update" parameterClass="AccessToken">
+        UPDATE dropbox_access_token
+        SET value = #value#, secret = #secret#, consumer_key = #consumerKey#
+        WHERE account_id = #accountId#    
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM dropbox_access_token
+    </sql>
+    
+    <select id="get" parameterClass="String" resultMap="DropboxAccessTokenMap" cacheModel="DropboxAccessTokenCache">
+        <include refid="getInternal"/>
+        WHERE account_id = #accountId#
+    </select>
+
+    <select id="getAll" resultClass="java.lang.String">
+        SELECT account_id FROM dropbox_access_token
+    </select>
+    
+	<delete id="delete" parameterClass="String">
+        DELETE FROM dropbox_access_token WHERE account_id = #accountId#
+    </delete>
+
+</sqlMap>

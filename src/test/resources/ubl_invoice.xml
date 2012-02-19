@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:ns7="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:sdt="urn:oasis:names:specification:ubl:schema:xsd:SpecializedDatatypes-2" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"><cec:UBLExtensions xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"><cec:UBLExtension><cec:ExtensionURI>urn:oasis:names:specification:ubl:profile:dsig:signature</cec:ExtensionURI><cec:ExtensionContent><sig:UBLDocumentSignatures xmlns:sig="urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2"><sig:SignatureInformation><cbc:ID>urn:oasis:names:specification:ubl:signatures:1</cbc:ID><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></SignatureMethod><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116"><XPath>count(ancestor-or-self::sig:UBLDocumentSignatures | here()/ancestor::sig:UBLDocumentSignatures[1]) &gt; count(ancestor-or-self::sig:UBLDocumentSignatures)</XPath></Transform></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod><DigestValue>FyXbEWdJXBoIt3QFT+tCxBxnzeBiv0/aZYQWI7H2jrM=</DigestValue></Reference></SignedInfo><SignatureValue>mlHmnhmXiAnkcmJNeT6SsBJpFAHO7Wwj+DscYRV8bp2ZBOy0VLDr+SlP6Ybj7gITNkc4U/Al4cLX
+0dIh38xJblP4rFHHkADVzEXzfdA8JkUSy2KHXUvGJW9xOwNJSTPJ3PrhS5qjncm1D2Z1HFZUVEG6
+x0PpZt2X6RJa82iDffE=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>qjPnoh/BgvN22UWUVcwVYr9xWj49ffp2obvmR5WttIJssS5ZbCYOxjIjO3gIcNAu6NLFn5gpsp95
+FPNY1JDGII1qPnp9zyI6HKyA3yb5Vq9ONm2cLRfOz2zrvPdG+38ZLMzHe1rLALXEoIqfJWWt3u2B
+UvWP+h5ZYzm8px1gmJM=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIICATCCAWoCCQCo1AOqHHrvcDANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJBVTETMBEGA1UE
+CBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMB4XDTEwMDQw
+OTA5MTkyN1oXDTI5MTIyNTA5MTkyN1owRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUtU3Rh
+dGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCBnzANBgkqhkiG9w0BAQEFAAOB
+jQAwgYkCgYEAqjPnoh/BgvN22UWUVcwVYr9xWj49ffp2obvmR5WttIJssS5ZbCYOxjIjO3gIcNAu
+6NLFn5gpsp95FPNY1JDGII1qPnp9zyI6HKyA3yb5Vq9ONm2cLRfOz2zrvPdG+38ZLMzHe1rLALXE
+oIqfJWWt3u2BUvWP+h5ZYzm8px1gmJMCAwEAATANBgkqhkiG9w0BAQUFAAOBgQARLOs0egYgj7q7
+mN0uthdbzAEg75Ssgh4JuOJ3iXI/sbqAIQ9uwsLodo+Fkpb5AiLlNFu7mCZXG/SzAAO3ZBLAWy4S
+KsXANu2/s6U5ClYd93HoZwzXobKb+2+aMf7KiAg1wHPUcyKx2c5nplgqQ7Hwldk9S9yzaRsYEGWT
++xpSUA==</X509Certificate></X509Data></KeyInfo></Signature></sig:SignatureInformation></sig:UBLDocumentSignatures></cec:ExtensionContent></cec:UBLExtension></cec:UBLExtensions>
+<cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+<cbc:CustomizationID>OIOUBL-2.01</cbc:CustomizationID>
+<cbc:ProfileID schemeAgencyID="320" schemeID="urn:oioubl:id:profileid-1.2">urn:www.nesubl.eu:profiles:profile5:ver2.0</cbc:ProfileID>
+<cbc:ID>HSD5</cbc:ID>
+<cbc:IssueDate>2011-10-30</cbc:IssueDate>
+<cbc:InvoiceTypeCode listAgencyID="320" listID="urn:oioubl:codelist:invoicetypecode-1.1">380</cbc:InvoiceTypeCode>
+<cbc:Note>Pay with DIBS Payment Gateway plugin.</cbc:Note>
+<cbc:TaxPointDate>2011-10-30</cbc:TaxPointDate>
+<cbc:DocumentCurrencyCode>DKK</cbc:DocumentCurrencyCode>
+<cac:AdditionalDocumentReference>
+<cbc:ID>1</cbc:ID>
+<cbc:DocumentTypeCode listID="urn:tradeshift.com:api:1.0:documenttypecode">humanreadableversion</cbc:DocumentTypeCode>
+<cac:Attachment>
+<cbc:EmbeddedDocumentBinaryObject encodingCode="Base64" filename="originaldocument.pdf" mimeCode="application/pdf">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b2RpbmcvV2luQW5zaUVuY29kaW5nL1N1YnR5cGUvVHlwZTE+PgplbmRvYmoKNiAwIG9iajw8L1R5cGUvUGFnZXMvQ291bnQgMS9LaWRzWzEgMCBSXT4+CmVuZG9iago3IDAgb2JqPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDYgMCBSPj4KZW5kb2JqCjggMCBvYmo8PC9Qcm9kdWNlcihpVGV4dCAyLjAuOCBcKGJ5IGxvd2FnaWUuY29tXCkpL01vZERhdGUoRDoyMDExMTAzMDEyMTY0NlopL0NyZWF0aW9uRGF0ZShEOjIwMTExMDMwMTIxNjQ2Wik+PgplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAzMjc2IDAwMDAwIG4gCjAwMDAwMDM0NjYgMDAwMDAgbiAKMDAwMDAwMzU1OCAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDE4MjQgMDAwMDAgbiAKMDAwMDAwMzY0NSAwMDAwMCBuIAowMDAwMDAzNjk1IDAwMDAwIG4gCjAwMDAwMDM3MzkgMDAwMDAgbiAKdHJhaWxlcgo8PC9Sb290IDcgMCBSL0lEIFs8NTQyYjNjOTc1NTFkOTQ4NWIxNzAxZDczNjYyNDg1NTI+PDljNTBmMWQyZmU0MTIwZTZkZDYzY2RkZGVhYzNkZjgyPl0vSW5mbyA4IDAgUi9TaXplIDk+PgpzdGFydHhyZWYKMzg1OAolJUVPRgo=</cbc:EmbeddedDocumentBinaryObject>
+</cac:Attachment>
+</cac:AdditionalDocumentReference>
+<cac:AccountingSupplierParty>
+<cac:Party>
+<cbc:EndpointID schemeID="DK:CVR">DK99775533</cbc:EndpointID>
+<cac:PartyIdentification>
+<cbc:ID schemeID="DK:CVR">DK99775533</cbc:ID>
+</cac:PartyIdentification>
+<cac:PartyName>
+<cbc:Name>SASH SD</cbc:Name>
+</cac:PartyName>
+<cac:PostalAddress>
+<cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+<cbc:StreetName>Herlev Vange</cbc:StreetName>
+<cbc:AdditionalStreetName></cbc:AdditionalStreetName>
+<cbc:BuildingNumber>95</cbc:BuildingNumber>
+<cbc:MarkAttention></cbc:MarkAttention>
+<cbc:CityName>Herlev</cbc:CityName>
+<cbc:PostalZone>2730</cbc:PostalZone>
+<cbc:CountrySubentity></cbc:CountrySubentity>
+<cac:Country>
+<cbc:IdentificationCode>DK</cbc:IdentificationCode>
+</cac:Country>
+</cac:PostalAddress>
+<cac:PartyTaxScheme>
+<cbc:CompanyID schemeID="DK:SE">DK99775533</cbc:CompanyID>
+<cac:TaxScheme>
+<cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+<cbc:Name>Moms</cbc:Name>
+</cac:TaxScheme>
+</cac:PartyTaxScheme>
+<cac:PartyLegalEntity>
+<cbc:RegistrationName>SASH SD</cbc:RegistrationName>
+<cbc:CompanyID schemeID="DK:CVR">DK99775533</cbc:CompanyID>
+</cac:PartyLegalEntity>
+<cac:Contact>
+<cbc:ID schemeURI="http://tradeshift.com/api/1.0/userId">68573a21-ab41-4e05-9564-6f90962f625b</cbc:ID>
+<cbc:Name>Alexander Burakevych</cbc:Name>
+</cac:Contact>
+<cac:Person>
+<cbc:FirstName>Alexander</cbc:FirstName>
+<cbc:FamilyName>Burakevych</cbc:FamilyName>
+</cac:Person>
+</cac:Party>
+</cac:AccountingSupplierParty>
+<cac:AccountingCustomerParty>
+<cac:Party>
+<cac:PartyIdentification>
+<cbc:ID schemeID="TS:ID">12a76c27-2f28-4a1b-972d-6cc9dd30bf27</cbc:ID>
+</cac:PartyIdentification>
+<cac:PartyName>
+<cbc:Name>Lemberg</cbc:Name>
+</cac:PartyName>
+<cac:PostalAddress>
+<cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+<cbc:StreetName></cbc:StreetName>
+<cbc:AdditionalStreetName></cbc:AdditionalStreetName>
+<cbc:BuildingNumber></cbc:BuildingNumber>
+<cbc:MarkAttention></cbc:MarkAttention>
+<cbc:CityName></cbc:CityName>
+<cbc:PostalZone></cbc:PostalZone>
+<cbc:CountrySubentity></cbc:CountrySubentity>
+<cac:Country>
+<cbc:IdentificationCode>UA</cbc:IdentificationCode>
+</cac:Country>
+</cac:PostalAddress>
+<cac:Contact></cac:Contact>
+</cac:Party>
+</cac:AccountingCustomerParty>
+<cac:PaymentMeans>
+<cbc:ID>fc5306ef-6430-46e2-af48-116d7a045dec</cbc:ID>
+<cbc:PaymentMeansCode>10</cbc:PaymentMeansCode>
+</cac:PaymentMeans>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="DKK">152.00</cbc:TaxAmount>
+<cac:TaxSubtotal>
+<cbc:TaxableAmount currencyID="DKK">608.00</cbc:TaxableAmount>
+<cbc:TaxAmount currencyID="DKK">152.00</cbc:TaxAmount>
+<cac:TaxCategory>
+<cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxcategoryid-1.1">StandardRated</cbc:ID>
+<cbc:Percent>25</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+<cbc:Name>Moms</cbc:Name>
+</cac:TaxScheme>
+</cac:TaxCategory>
+</cac:TaxSubtotal>
+</cac:TaxTotal>
+<cac:LegalMonetaryTotal>
+<cbc:LineExtensionAmount currencyID="DKK">608.00</cbc:LineExtensionAmount>
+<cbc:TaxExclusiveAmount currencyID="DKK">152.00</cbc:TaxExclusiveAmount>
+<cbc:TaxInclusiveAmount currencyID="DKK">760.00</cbc:TaxInclusiveAmount>
+<cbc:PayableAmount currencyID="DKK">760.00</cbc:PayableAmount>
+</cac:LegalMonetaryTotal>
+<cac:InvoiceLine>
+<cbc:ID>1</cbc:ID>
+<cbc:InvoicedQuantity unitCode="EA">8</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="DKK">608.00</cbc:LineExtensionAmount>
+<cac:DocumentReference>
+<cbc:ID>TR123</cbc:ID>
+<cbc:DocumentTypeCode listID="urn:tradeshift.com:api:1.0:documenttypecode">BOL ID</cbc:DocumentTypeCode>
+</cac:DocumentReference>
+<cac:TaxTotal>
+<cbc:TaxAmount currencyID="DKK">152.00</cbc:TaxAmount>
+<cac:TaxSubtotal>
+<cbc:TaxableAmount currencyID="DKK">608.00</cbc:TaxableAmount>
+<cbc:TaxAmount currencyID="DKK">152.00</cbc:TaxAmount>
+<cac:TaxCategory>
+<cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxcategoryid-1.1">StandardRated</cbc:ID>
+<cbc:Percent>25</cbc:Percent>
+<cac:TaxScheme>
+<cbc:ID schemeAgencyID="320" schemeID="urn:oioubl:id:taxschemeid-1.1">63</cbc:ID>
+<cbc:Name>Moms</cbc:Name>
+</cac:TaxScheme>
+</cac:TaxCategory>
+</cac:TaxSubtotal>
+</cac:TaxTotal>
+<cac:Item>
+<cbc:Description>Website development</cbc:Description>
+<cbc:Name>Website development</cbc:Name>
+<cac:SellersItemIdentification>
+<cbc:ID schemeAgencyID="9" schemeID="GTIN">1</cbc:ID>
+</cac:SellersItemIdentification>
+</cac:Item>
+<cac:Price>
+<cbc:PriceAmount currencyID="DKK">76.00</cbc:PriceAmount>
+<cbc:BaseQuantity unitCode="EA">1</cbc:BaseQuantity>
+<cbc:OrderableUnitFactorRate>1</cbc:OrderableUnitFactorRate>
+</cac:Price>
+</cac:InvoiceLine>
+</Invoice>

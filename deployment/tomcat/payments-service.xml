@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="/PATH_TO_WAR_DIR/payments-service-X.X.X.war">
+    <Resource
+        name="configurationFactory"
+        type="org.apache.commons.configuration.ConfigurationFactory"
+        factory="org.apache.naming.factory.BeanFactory"
+        configurationFileName="/PATH_TO_CONFIG_DIR/config.xml"
+    />
+</Context>

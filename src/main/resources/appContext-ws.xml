@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/util
+     http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	 http://www.springframework.org/schema/mvc
+	 http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">     
+
+	 <mvc:annotation-driven /> 
+
+    <bean id="client.http.request.factory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+        <constructor-arg>
+            <bean class="org.apache.commons.httpclient.HttpClient">
+                <constructor-arg name="params">
+                    <bean class="org.apache.commons.httpclient.params.HttpClientParams">
+                        <property name="authenticationPreemptive" value="false" />
+                        <property name="connectionManagerClass" value="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!-- Tradeshift API -->
+    <bean id="tsCredentialsStorage" class="org.integration.payments.server.ws.auth.impl.DBOAuth1AccessCredentialsStorage">
+        <constructor-arg name="securityDao" ref="tradeshiftSecurityDao" />
+    </bean>
+    
+    <bean id="objectMapper" class="org.integration.payments.server.ws.util.UnifiedObjectMapper"/>
+
+    <bean id="ws.tradeshift.restOperations" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="client.http.request.factory" />
+        <property name="interceptors">
+            <list>
+                <bean class="org.integration.payments.server.ws.tradeshift.auth.TradeshiftOAuth1ManagerRequestInterceptor">
+					<constructor-arg name="consumerMap">
+            			<map>
+                			<entry key="${tradeshift.api.oauth.free.consumerKey}" value="${tradeshift.api.oauth.free.consumerSecret}"/>
+            			</map>
+					</constructor-arg>
+                    <constructor-arg name="credentialsStorage" ref="tsCredentialsStorage" />
+                </bean>
+            </list>
+        </property>
+        <property name="messageConverters">
+        	<list>
+				<bean class="org.integration.payments.server.ws.tradeshift.message.converter.AppSettingsHttpConverter" />
+        		<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        			<property name="objectMapper" ref="objectMapper"/>
+				</bean>
+	           	<bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+	           	<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+        	</list>
+        </property>
+    </bean>
+    
+    <bean id="ws.tradeshift.service" class="org.integration.payments.server.ws.tradeshift.impl.TradeshiftApiServiceImpl">
+        <constructor-arg name="apiBaseUrl" value="${tradeshift.api.baseUrl}" />
+        <constructor-arg name="restOperations" ref="ws.tradeshift.restOperations" />
+        <property name="defultRequestHeaders">
+            <map>
+                <entry value="${tradeshift.api.userAgent}">
+                    <key><util:constant static-field="org.integration.payments.server.ws.ApiConstants.USER_AGENT_HEADER_NAME"/></key>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="ws.tradeshift.CredentialsUpdateManager" class="org.integration.payments.server.ws.tradeshift.auth.TradehiftCredentialsUpdateManager">
+        <constructor-arg name="apiService" ref="ws.tradeshift.service" />
+        <constructor-arg name="credentialsStorage" ref="tsCredentialsStorage" />
+        <property name="callbackTimeout" value="6000"/>
+    </bean>
+    
+    <!-- Dropbox API -->
+    <bean id="dropboxCredentialsStorage" class="org.integration.payments.server.ws.auth.impl.DBOAuth1AccessCredentialsStorage">
+		<constructor-arg name="securityDao" ref="dropboxSecurityDao" />
+    </bean>
+    
+    <bean id="dropboxRequestTokenStorage" class="org.integration.payments.server.ws.auth.impl.InmemoryLRUOAuth1TokenStorage">
+        <constructor-arg index="0" name="maxCacheSize" value="100" />
+    </bean>
+    
+    <bean id="ws.dropbox.serviceProvicer" class="org.integration.payments.server.ws.dropbox.auth.DropboxServiceProvider">
+        <constructor-arg name="consumerKey" value="${dropbox.api.oauth.consumerKey}" />
+        <constructor-arg name="consumerSecret" value="${dropbox.api.oauth.consumerSecret}" />
+        <constructor-arg name="oauth1Operations">
+        	<bean class="org.springframework.social.oauth1.OAuth1Template">
+        		<constructor-arg name="consumerKey" value="${dropbox.api.oauth.consumerKey}" />
+        		<constructor-arg name="consumerSecret" value="${dropbox.api.oauth.consumerSecret}" />
+        		<constructor-arg name="requestTokenUrl" value="${dropbox.api.oauth.requestTokenUrl}" />
+        		<constructor-arg name="authorizeUrl" value="${dropbox.api.oauth.authorizeUrl}" />
+        		<constructor-arg name="accessTokenUrl" value="${dropbox.api.oauth.accessTokenUrl}" />
+        		<constructor-arg name="version" value="${dropbox.api.oauth.version}" />
+        	</bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="ws.dropbox.authorizationManager" class="org.integration.payments.server.ws.dropbox.auth.DropboxOAuth1AuthorizationManager">
+        <constructor-arg name="consumerKey" value="${dropbox.api.oauth.consumerKey}" />
+        <constructor-arg name="consumerSecret" value="${dropbox.api.oauth.consumerSecret}" />
+        <constructor-arg name="requestTokenStorage" ref="dropboxRequestTokenStorage" />
+        <constructor-arg name="credentialsStorage" ref="dropboxCredentialsStorage" />
+        <constructor-arg name="serviceProvider" ref="ws.dropbox.serviceProvicer" />
+    </bean>
+
+    <bean id="ws.dropbox.restOperations" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="client.http.request.factory" />
+        <property name="interceptors">
+            <list>
+                <bean class="org.integration.payments.server.ws.dropbox.auth.DropboxOAuth1ManagerRequestInterceptor">
+                    <constructor-arg name="consumerKey" value="${dropbox.api.oauth.consumerKey}" />
+                    <constructor-arg name="consumerSecret" value="${dropbox.api.oauth.consumerSecret}" />
+                    <constructor-arg name="credentialsStorage" ref="dropboxCredentialsStorage" />
+                </bean>
+            </list>
+        </property>
+        <property name="messageConverters">
+        	<list>
+        		<bean class="org.integration.payments.server.ws.dropbox.message.convertor.DropboxFileHttpConverter">
+					<constructor-arg name="objectMapper" ref="objectMapper"/>
+				</bean>
+        		<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        			<property name="objectMapper" ref="objectMapper"/>
+        		</bean>
+        		<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+        		<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+	           	<bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+	           	<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+        	</list>
+        </property>
+    </bean>
+    
+    <bean id="ws.dropbox.service" class="org.integration.payments.server.ws.dropbox.impl.DropboxApiServiceImpl">
+        <constructor-arg name="apiBaseUrl" value="${dropbox.api.baseUrl}" />
+        <constructor-arg name="apiContentBaseUrl" value="${dropbox.api-content.baseUrl}" />
+        <constructor-arg name="restOperations" ref="ws.dropbox.restOperations" />
+        <property name="defultRequestHeaders">
+            <map>
+                <entry value="${tradeshift.api.userAgent}">
+                    <key><util:constant static-field="org.integration.payments.server.ws.ApiConstants.USER_AGENT_HEADER_NAME"/></key>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- AOP stuff-->
+
+    <!-- XML based configuration -->
+    <!--
+    <aop:config proxy-target-class="false">
+        <aop:aspect id="ws.tradeshift.CredentialsUpdateManager.aspect" ref="ws.tradeshift.CredentialsUpdateManager">
+            <aop:pointcut id="ws.tradeshift.credentialsStorage.get.pointcut" 
+                expression="execution(public * org.integration.payments.server.ws.auth.CredentialsStorage.get(..)) and bean(ws.tradeshift.credentialsStorage) and args(companyAccountId)" />
+
+            <aop:before pointcut-ref="ws.tradeshift.credentialsStorage.get.pointcut" method="checkAndRequestResendCredentials" />
+        </aop:aspect>
+    </aop:config>
+    -->
+
+    <!-- Annotation based configuration -->
+    <aop:aspectj-autoproxy proxy-target-class="false" />
+    
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:DocumentFileList itemCount="2" itemsPerPage="10" pageId="0" numPages="1" xmlns:ns2="http://tradeshift.com/api/public/1.0">
+    <Items>
+        <FileName>Testme.xml</FileName>
+        <ActorId>cccb11d6-7ca5-4e3d-a33e-933c88945ff1</ActorId>
+        <DocumentId>c3ae6ad3-2b7d-463b-8bb0-f83ad644a922</DocumentId>
+        <FileSize>0</FileSize>
+        <ValidationErrorsSize>0</ValidationErrorsSize>
+    </Items>
+    <Items>
+        <FileName>Testme1.xml</FileName>
+        <ActorId>b7a5be07-cc82-43a5-a146-8e346a91ebc7</ActorId>
+        <DocumentId>2951525b-f750-4690-bfaf-0264bae080d2</DocumentId>
+        <FileSize>0</FileSize>
+        <ValidationErrorsSize>0</ValidationErrorsSize>
+    </Items>
+</ns2:DocumentFileList>

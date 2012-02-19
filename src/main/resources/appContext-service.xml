@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	 http://www.springframework.org/schema/task 
+     http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+     
+	<task:scheduler id="dropboxScheduler" pool-size="10"/>
+     
+	<task:scheduled-tasks scheduler="dropboxScheduler">
+    	<task:scheduled ref="dropboxDirectoryScheduler" method="process" fixed-delay="360000"/>
+	</task:scheduled-tasks>
+     
+	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.files.DropboxDirectoryShceduler">
+     	<property name="executor" ref="dropboxDirectoryExecutor"/>
+     	<property name="accountService" ref="dropboxAccountService"/>
+     </bean>
+     
+     <bean id="dropboxDirectoryExecutor" class="org.integration.connectors.dropbox.files.DropboxDirectoryExecutor">
+     	<property name="fileService" ref="dropboxFileService"/>
+     	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
+     </bean>
+
+	<bean id="documentFactory" class="org.integration.payments.server.document.DocumentFactory" />
+
+	<bean id="documentService" class="org.integration.payments.server.document.DocumentService" >
+		<property name="documentFactory" ref="documentFactory"/>
+		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
+	</bean>
+
+    <bean id="pollingService" class="org.integration.payments.server.polling.PollingService">
+        <property name="userProfileDao" ref="userProfileDao" />
+        <property name="userFeedbackDao" ref="userFeedbackDao" />
+        <property name="pluginUsageInfoDao" ref="pluginUsageInfoDao" />
+    </bean>
+    
+   	<bean id="fsConnectorService" class="org.integration.connectors.filesystem.FileSystemConnectorService" >
+		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
+	</bean>
+	
+	<bean id="dropboxTsConnectorService" class="org.integration.connectors.dropbox.TradeshiftConnectorService" >
+		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
+	</bean>
+	
+	<bean id="dropboxAuthorisationService" class="org.integration.connectors.dropbox.security.DropboxAuthorisationService">
+		<property name="oauthManager" ref="ws.dropbox.authorizationManager"/>
+	</bean>
+	
+	<bean id="dropboxAccountService" class="org.integration.connectors.dropbox.account.DropboxAccountService">
+		<constructor-arg name="apiService" ref="ws.dropbox.service"/>
+		<constructor-arg name="accountDao" ref="dropboxAccountDao"/>
+	</bean>
+	
+	<bean id="dropboxFileService" class="org.integration.connectors.dropbox.files.DropboxFileService">
+		<property name="apiService" ref="ws.dropbox.service"/>
+		<property name="root" value="${dropbox.files.root}"/>
+	</bean>
+	
+	<bean id="dropboxDirectoryService" class="org.integration.connectors.dropbox.directory.DropboxDirectoryService">
+		<property name="directoryDao" ref="dropboxDirectoryDao"/>
+	</bean>
+	
+	<bean id="tradeshiftAccountService" class="org.integration.connectors.tradeshift.account.TradeshiftAccountService">
+		<constructor-arg name="apiService" ref="ws.tradeshift.service"/>
+		<constructor-arg name="accountDao" ref="tradeshiftAccountDao"/>
+	</bean>
+	
+	<bean id="tradeshiftSecurityService" class="org.integration.connectors.tradeshift.security.TradeshiftSecurityService">
+		<constructor-arg name="creadentialStorage" ref="tsCredentialsStorage"/>
+	</bean>
+</beans>
