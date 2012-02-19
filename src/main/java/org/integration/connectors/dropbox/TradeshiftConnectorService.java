@@ -2,12 +2,12 @@ package org.integration.connectors.dropbox;
 
 import org.integration.account.Account;
 import org.integration.connectors.ConnectorService;
-import org.integration.connectors.documentfiles.DocumentFile;
 import org.integration.connectors.dropbox.account.DropboxAccountService;
 import org.integration.connectors.dropbox.files.DropboxFileService;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.account.TradeshiftAccountService;
 import org.integration.connectors.tradeshift.document.DocumentService;
+import org.integration.connectors.tradeshift.document.files.DocumentFile;
 
 public class TradeshiftConnectorService extends ConnectorService {
     private TradeshiftAccountService masterAccountService;

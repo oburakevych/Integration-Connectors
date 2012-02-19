@@ -1,4 +1,4 @@
-package org.integration.payments.server.ws.tradeshift.message.converter;
+package org.integration.connectors.tradeshift.appsettings;
 
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.integration.connectors.tradeshift.appsettings.AppSettings;
 import org.integration.connectors.tradeshift.appsettings.AppSettingsHttpConverter;
-import org.integration.payments.server.mock.MockHttpInputMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

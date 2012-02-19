@@ -77,9 +77,9 @@ public class DropboxOAuth1AuthorizationManager {
         return url;
     }
     
-    public OAuthToken getAccessToken(String companyAccountId) {
+    public AccessToken getAccessToken(String companyAccountId) {
         OAuthToken requestToken = getRequestTokenStorage().get(companyAccountId);
-        
+
         if (requestToken == null) {
             return null;
         }
@@ -92,7 +92,7 @@ public class DropboxOAuth1AuthorizationManager {
         
         log.debug("Received Access Token: key {}, secret {} for account {}", new Object[] {accessToken.getValue(), accessToken.getSecret(), companyAccountId});
         
-        AccessToken  dropboxAccessToken = new AccessToken(companyAccountId, accessToken, getConsumerKey());
+        AccessToken dropboxAccessToken = new AccessToken(companyAccountId, accessToken, getConsumerKey());
         
         DropboxAccount account = new DropboxAccount();
         account.setId(companyAccountId);
@@ -100,7 +100,7 @@ public class DropboxOAuth1AuthorizationManager {
         getAccountService().saveAccount(account);
         getCredentialsStorage().save(companyAccountId, dropboxAccessToken);
         
-        return accessToken;
+        return dropboxAccessToken;
     }
 
     protected void setServiceProvider(DropboxServiceProvider serviceProvider) {

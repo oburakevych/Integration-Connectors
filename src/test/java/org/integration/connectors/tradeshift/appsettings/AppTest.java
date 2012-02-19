@@ -1,4 +1,4 @@
-package org.integration.payments.server.service;
+package org.integration.connectors.tradeshift.appsettings;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

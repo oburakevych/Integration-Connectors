@@ -25,7 +25,7 @@ public class DropboxDirectoryServiceTest {
     public void saveDirectorytest() {
         DropboxDirectory directory = createDirectory();
         
-        directoryService.saveDirectory(directory);
+        directoryService.save(directory);
     }
     
     private DropboxDirectory createDirectory() {

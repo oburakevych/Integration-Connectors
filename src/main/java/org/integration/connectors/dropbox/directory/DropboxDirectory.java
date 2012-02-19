@@ -7,30 +7,35 @@ import org.integration.connectors.dropbox.files.Entry;
 import org.integration.util.DateUtils;
 
 public class DropboxDirectory {
-    private UUID id;
+    private String id;
     private String accountId;
     private String directory;
     private String hash;
     private Date modified;
     private Date lastCheck;
+    private Date lastProcessed;
     private boolean isUpdated;
     
     public DropboxDirectory() {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
+        isUpdated = true;
     }
     
     public DropboxDirectory(String accountId, Entry directoryEntry) {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
         this.accountId = accountId;
         this.directory = directoryEntry.getPath();
         this.hash = directoryEntry.getHash();
-        this.modified = DateUtils.parseEntryDate(directoryEntry.getModified());
+        if (directoryEntry.getModified() != null) {
+            this.modified = DateUtils.parseEntryDate(directoryEntry.getModified());
+        }
+        this.isUpdated = true;
     }
     
-    public UUID getId() {
+    public String getId() {
         return id;
     }
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getAccountId() {
@@ -72,5 +77,28 @@ public class DropboxDirectory {
         return lastCheck;
     }
     
-    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("\nDropboxDirectory: ");
+        builder.append("\n\t{");
+        builder.append("\n\t\tid: " + getId());
+        builder.append("\n\t\taccountId: " + getAccountId());
+        builder.append("\n\t\tdirectory: " + getDirectory());
+        builder.append("\n\t\thash: " + getHash());
+        builder.append("\n\t\tmodified: " + getModified());
+        builder.append("\n\t\tlastCheck: " + getLastCheck());
+        builder.append("\n\t\tlastProcessed: " + getLastProcessed());
+        builder.append("\n\t\tisUpdated: " + isUpdated());
+        builder.append("\n\t}");
+        
+        return builder.toString();
+    }
+
+    public void setLastProcessed(Date lastProcessed) {
+        this.lastProcessed = lastProcessed;
+    }
+
+    public Date getLastProcessed() {
+        return lastProcessed;
+    }
 }

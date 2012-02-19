@@ -22,12 +22,14 @@ CREATE TABLE dropbox_access_token (
 CREATE TABLE dropbox_directory (
   id VARCHAR(40) PRIMARY KEY,
   account_id VARCHAR(40) NOT NULL,
-  directory VARCHAR(255),
+  directory VARCHAR(255) NOT NULL,
   hash VARCHAR(255),
-  modified TIMESTAMP NOT NULL,
+  modified TIMESTAMP,
   last_check TIMESTAMP,
-  is_updated INT,
+  last_processed TIMESTAMP,
+  is_updated BOOLEAN DEFAULT TRUE,
   CONSTRAINT FOREIGN KEY 
-    dropbox_hash_access_roken_fk (account_id) 
-    REFERENCES dropbox_access_token (account_id)
+    dropbox_hash_access_token_fk (account_id) 
+    REFERENCES dropbox_access_token (account_id),
+  CONSTRAINT UNIQUE INDEX dropbox_dir_account_index (account_id, directory)
 ) ENGINE=InnoDB;

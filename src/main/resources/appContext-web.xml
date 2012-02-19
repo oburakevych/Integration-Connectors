@@ -32,11 +32,7 @@
     
     
     <!-- auto-detect annotations -->
-    <context:component-scan base-package="org.integration.payments.server.ws.controller" />
-    <context:component-scan base-package="org.integration.payments.server.ws.util" />
-    <context:component-scan base-package="org.integration.payments.server.polling" />
-    <context:component-scan base-package="org.integration.payments.server.ui" />
-    <context:component-scan base-package="org.integration.connectors" />
+    <context:component-scan base-package="org.integration" />
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

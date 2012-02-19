@@ -1,4 +1,4 @@
-package org.integration.connectors;
+package org.integration.connectors.dropbox.security;
 
 import org.integration.connectors.dropbox.security.DropboxOAuth1AuthorizationManager;
 import org.junit.Test;

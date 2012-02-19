@@ -3,9 +3,9 @@ package org.integration.connectors;
 import java.util.UUID;
 
 import org.integration.account.Account;
-import org.integration.connectors.documentfiles.DocumentFileList;
-import org.integration.connectors.documentfiles.DocumentFileState;
 import org.integration.connectors.tradeshift.document.Dispatch;
+import org.integration.connectors.tradeshift.document.files.DocumentFileList;
+import org.integration.connectors.tradeshift.document.files.DocumentFileState;
 import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
 
 

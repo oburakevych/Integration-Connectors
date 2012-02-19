@@ -35,10 +35,6 @@
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
     -->
-    <listener>
-        <description>Application context listener to set global JSP variables.</description>
-        <listener-class>org.integration.payments.server.ui.context.ApplicationListener</listener-class>
-    </listener>
 
     <!-- ### Filters ### -->
     <filter>

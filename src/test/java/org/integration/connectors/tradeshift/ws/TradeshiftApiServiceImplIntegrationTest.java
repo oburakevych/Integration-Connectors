@@ -1,4 +1,4 @@
-package org.integration.payments.server.ws.tradeshift.impl;
+package org.integration.connectors.tradeshift.ws;
 
 import static org.junit.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -6,12 +6,12 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 import java.io.IOException;
 import java.util.UUID;
 
-import org.integration.connectors.documentfiles.DocumentFileList;
+import org.integration.connectors.tradeshift.document.DocumentServiceTest;
 import org.integration.connectors.tradeshift.appsettings.AppSettings;
 import org.integration.connectors.tradeshift.document.Dispatch;
 import org.integration.connectors.tradeshift.document.DocumentMetadata;
+import org.integration.connectors.tradeshift.document.files.DocumentFileList;
 import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
-import org.integration.payments.server.document.DocumentServiceTest;
 import org.integration.util.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;

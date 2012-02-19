@@ -1,21 +1,14 @@
-package org.integration.connectors.documentfiles;
+package org.integration.connectors.tradeshift.document.files;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
-
-@XmlRootElement(name="DocumentFileList", namespace = "http://tradeshift.com/api/public/1.0")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class DocumentFileList {
-    @XmlElement(name="Items")
-	private List<DocumentFile> items = new ArrayList<DocumentFile>();
-	
+public abstract class PagedList<T> {
+
     @XmlAttribute(name="numPages")
     private Integer pages;
     
@@ -24,10 +17,24 @@ public class DocumentFileList {
     
     @XmlAttribute(name="itemsPerPage")
     private Integer itemsPerPage;
+    
+    public PagedList(List<T> items, Integer pages, Integer page, Integer itemsPerPage, int itemCount) {
+        setItems(items);
+        setPages(pages);
+        setPage(page);
+        setItemsPerPage(itemsPerPage);
+        setItemCount(itemCount);
+    }
 
     @XmlAttribute(name="itemCount")
     private int itemCount;
     
+    public PagedList() {}
+
+    public abstract List<T> getItems();
+    
+    public abstract void setItems(List<T> items);
+
     public void setItemsPerPage(Integer itemsPerPage) {
         this.itemsPerPage = itemsPerPage;
     }
@@ -52,7 +59,7 @@ public class DocumentFileList {
         return itemsPerPage;
     }
 
-    public void addItem(DocumentFile item) {
+    public void addItem(T item) {
         getItems().add(item);
     }
 
@@ -62,13 +69,5 @@ public class DocumentFileList {
     
     public void setItemCount(int itemCount) {
         this.itemCount = itemCount;
-    }
-	
-	public List<DocumentFile> getItems() {
-		return items;
-	}
-
-    public void setItems(List<DocumentFile> items) {
-        this.items = items;
     }
 }

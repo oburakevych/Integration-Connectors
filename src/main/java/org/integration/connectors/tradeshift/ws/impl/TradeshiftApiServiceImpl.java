@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.integration.connectors.documentfiles.DocumentFileList;
-import org.integration.connectors.documentfiles.DocumentFileState;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.appsettings.AppSettings;
 import org.integration.connectors.tradeshift.document.Dispatch;
 import org.integration.connectors.tradeshift.document.DocumentMetadata;
+import org.integration.connectors.tradeshift.document.files.DocumentFileList;
+import org.integration.connectors.tradeshift.document.files.DocumentFileState;
 import org.integration.connectors.tradeshift.ws.TradeshiftApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

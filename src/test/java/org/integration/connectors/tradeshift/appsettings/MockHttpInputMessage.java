@@ -1,4 +1,4 @@
-package org.integration.payments.server.mock;
+package org.integration.connectors.tradeshift.appsettings;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

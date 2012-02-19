@@ -21,7 +21,7 @@
     
     <update id="update" parameterClass="DropboxAccount">
         UPDATE dropbox_account
-        SET deactivated = #deactivated#, name = #name#, email = #email#, country = #country#, lang = #language#
+        SET deactivated = #deactivated:TIMESTAMP#, name = #name#, email = #email#, country = #country#, lang = #language#
         WHERE id = #id#    
     </update>
     

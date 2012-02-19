@@ -1,6 +1,5 @@
 package org.integration.connectors.dropbox.files;
 
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,12 +11,13 @@ import org.integration.connectors.process.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DropboxDirectoryShceduler implements Scheduler {
+public class DropboxDirectoryCheckShceduler implements Scheduler {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
     
     private Executor executor;
     private DropboxAccountService accountService;
-    private int limit;
+    
+    private int limit = 100;
     
     @Override
     public void process() {
@@ -57,7 +57,4 @@ public class DropboxDirectoryShceduler implements Scheduler {
     public void setLimit(int limit) {
         this.limit = limit;
     }
-
-
-
 }

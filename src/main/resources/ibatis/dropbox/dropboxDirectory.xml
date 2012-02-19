@@ -10,13 +10,40 @@
         <result property="directory" column="directory" />
         <result property="hash" column="hash" />
         <result property="modified" column="modified" />
-        <result property="lastCheck" column="lastCheck" />
+        <result property="lastCheck" column="last_check" />
+        <result property="lastProcessed" column="last_processed" />
         <result property="isUpdated" column="is_updated" />
     </resultMap>
 
     <insert id="create" parameterClass="DropboxDirectory">
-        INSERT INTO dropbox_directory(id, account_id, directory, hash, modified, last_check, is_updated) 
-        					VALUES (#id#, #accountId#, #directory#, #hash#, #modified#, #lastCheck#, #isUpdated#)
+        INSERT INTO dropbox_directory(id, account_id, directory, hash, modified, last_check, last_processed, is_updated) 
+        					VALUES (#id#, #accountId#, #directory#, #hash#, #modified:TIMESTAMP#, #lastCheck:TIMESTAMP#, #lastProcessed:TIMESTAMP#, #isUpdated:BOOLEAN#)
     </insert>
+    
+	<update id="update" parameterClass="DropboxDirectory">
+        UPDATE dropbox_directory
+        SET hash=#hash#, modified=#modified:TIMESTAMP#, last_check=NOW(), last_processed=#lastProcessed:TIMESTAMP#, is_updated=#isUpdated:BOOLEAN#
+        WHERE id = #id#
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM dropbox_directory
+    </sql>
+    
+    <select id="getByAccount" parameterClass="String" resultMap="DropboxDirectoryMap">
+        <include refid="getInternal"/>
+        WHERE account_id = #accountId#
+    </select>
+    
+    <select id="getById" parameterClass="String" resultClass="DropboxDirectory">
+        <include refid="getInternal"/>
+        WHERE id = #id#
+    </select>
+    
+    <select id="getByAccountAndDir" parameterClass="java.util.Map" resultClass="DropboxDirectory">
+        <include refid="getInternal"/>
+        WHERE account_id = #accountId#
+        	AND directory = #directory#
+    </select>    
 
 </sqlMap>

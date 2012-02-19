@@ -1,4 +1,4 @@
-package org.integration.payments.server.document;
+package org.integration.connectors.tradeshift.document;
 
 import static org.junit.Assert.*;
 

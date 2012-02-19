@@ -2,10 +2,10 @@ package org.integration.connectors.tradeshift.ws;
 
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.module.SimpleModule;
-import org.integration.connectors.documentfiles.DocumentFileJsonDeserializer;
-import org.integration.connectors.documentfiles.DocumentFileList;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.account.TradeshiftJsonDeserializer;
+import org.integration.connectors.tradeshift.document.files.DocumentFileJsonDeserializer;
+import org.integration.connectors.tradeshift.document.files.DocumentFileList;
 
 
 public class TradeshiftModule extends SimpleModule {

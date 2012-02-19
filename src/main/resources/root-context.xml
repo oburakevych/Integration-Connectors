@@ -13,8 +13,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
     
-    <context:component-scan base-package="org.integration.payments.server" />
-    <context:component-scan base-package="org.integration.connectors" />
+    <context:component-scan base-package="org.integration" />
 
     <import resource="appContext-conf.xml" />
     <import resource="appContext-dao.xml" />

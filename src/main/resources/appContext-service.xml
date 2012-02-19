@@ -11,20 +11,23 @@
      http://www.springframework.org/schema/context/spring-context-3.0.xsd
 	 http://www.springframework.org/schema/task 
      http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-     
+
+ 	<task:annotation-driven scheduler="dropboxScheduler"/> 
 	<task:scheduler id="dropboxScheduler" pool-size="10"/>
      
 	<task:scheduled-tasks scheduler="dropboxScheduler">
-    	<task:scheduled ref="dropboxDirectoryScheduler" method="process" fixed-delay="360000"/>
+    	<task:scheduled ref="dropboxDirectoryScheduler" method="process" fixed-delay="30000"/>
 	</task:scheduled-tasks>
-     
-	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.files.DropboxDirectoryShceduler">
+      
+	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.files.DropboxDirectoryCheckShceduler">
      	<property name="executor" ref="dropboxDirectoryExecutor"/>
      	<property name="accountService" ref="dropboxAccountService"/>
+     	<property name="limit" value="100"/>
      </bean>
      
      <bean id="dropboxDirectoryExecutor" class="org.integration.connectors.dropbox.files.DropboxDirectoryExecutor">
      	<property name="fileService" ref="dropboxFileService"/>
+     	<property name="directoryService" ref="dropboxDirectoryService"/>
      	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
      </bean>
 
@@ -54,7 +57,7 @@
 	</bean>
 	
 	<bean id="dropboxDirectoryService" class="org.integration.connectors.dropbox.directory.DropboxDirectoryService">
-		<property name="directoryDao" ref="dropboxDirectoryDao"/>
+		<constructor-arg name="directoryDao" ref="dropboxDirectoryDao"/>
 	</bean>
 	
 	<bean id="tradeshiftAccountService" class="org.integration.connectors.tradeshift.account.TradeshiftAccountService">

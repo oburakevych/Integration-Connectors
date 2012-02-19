@@ -2,12 +2,12 @@ package org.integration.connectors.tradeshift.ws;
 
 import java.util.UUID;
 
-import org.integration.connectors.documentfiles.DocumentFileList;
-import org.integration.connectors.documentfiles.DocumentFileState;
 import org.integration.connectors.tradeshift.account.TradeshiftAccount;
 import org.integration.connectors.tradeshift.appsettings.AppSettings;
 import org.integration.connectors.tradeshift.document.Dispatch;
 import org.integration.connectors.tradeshift.document.DocumentMetadata;
+import org.integration.connectors.tradeshift.document.files.DocumentFileList;
+import org.integration.connectors.tradeshift.document.files.DocumentFileState;
 
 
 public interface TradeshiftApiService {
