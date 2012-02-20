@@ -35,12 +35,12 @@
         WHERE account_id = #accountId#
     </select>
     
-    <select id="getById" parameterClass="String" resultClass="DropboxDirectory">
+    <select id="getById" parameterClass="String" resultMap="DropboxDirectoryMap">
         <include refid="getInternal"/>
         WHERE id = #id#
     </select>
     
-    <select id="getByAccountAndDir" parameterClass="java.util.Map" resultClass="DropboxDirectory">
+    <select id="getByAccountAndDir" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap">
         <include refid="getInternal"/>
         WHERE account_id = #accountId#
         	AND directory = #directory#

@@ -38,33 +38,35 @@ public class DropboxDirectory {
     public void setId(String id) {
         this.id = id;
     }
-    public String getAccountId() {
-        return accountId;
-    }
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
+
     public String getDirectory() {
         return directory;
     }
+    
     public void setDirectory(String directory) {
         this.directory = directory;
     }
+    
     public String getHash() {
         return hash;
     }
+    
     public void setHash(String hash) {
         this.hash = hash;
     }
+    
     public Date getModified() {
         return modified;
     }
+    
     public void setModified(Date modified) {
         this.modified = modified;
     }
+    
     public boolean isUpdated() {
         return isUpdated;
     }
+    
     public void setUpdated(boolean isUpdated) {
         this.isUpdated = isUpdated;
     }
@@ -100,5 +102,13 @@ public class DropboxDirectory {
 
     public Date getLastProcessed() {
         return lastProcessed;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 }
