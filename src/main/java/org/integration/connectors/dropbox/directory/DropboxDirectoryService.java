@@ -49,7 +49,8 @@ public class DropboxDirectoryService {
     }
     
     public List<DropboxDirectory> getUpdateDirectories(int limit) {
-        return null;
+        log.debug("Getting all updated directories limited to {} entries", limit);
+        return directoryDao.getUpdatedDirectories(limit);
     }
 
 }

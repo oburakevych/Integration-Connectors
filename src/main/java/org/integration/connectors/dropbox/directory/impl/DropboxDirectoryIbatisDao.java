@@ -17,6 +17,7 @@ public class DropboxDirectoryIbatisDao extends SqlMapClientDaoSupport implements
     private static final String ST_GET_BY_ACCOUNT = NAMESPACE_FLAG + ".getByAccount";
     private static final String ST_GET_BY_ID = NAMESPACE_FLAG + ".getById";
     private static final String ST_GET_BY_ACCOUNT_AND_DIR = NAMESPACE_FLAG + ".getByAccountAndDir";
+    private static final String ST_GET_ALL_UPDATED = NAMESPACE_FLAG + ".getAllUpdated";
     
     @Override
     public void save(DropboxDirectory directory) {
@@ -44,10 +45,10 @@ public class DropboxDirectoryIbatisDao extends SqlMapClientDaoSupport implements
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<DropboxDirectory> getUpdatedDirectories() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<DropboxDirectory> getUpdatedDirectories(int limit) {
+        return getSqlMapClientTemplate().queryForList(ST_GET_ALL_UPDATED, 0, limit);
     }
 
     @Override

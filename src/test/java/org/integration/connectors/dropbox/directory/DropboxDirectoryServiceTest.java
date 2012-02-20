@@ -3,9 +3,9 @@ package org.integration.connectors.dropbox.directory;
 import static org.junit.Assert.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-import org.integration.connectors.dropbox.account.DropboxAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DropboxDirectoryServiceTest {
     private String accountId = "10ef0b35-7f42-42d0-a9e3-c2e4e7c4e504";
-    private static final String DEFAULT_DIR = UUID.randomUUID().toString();
     
     @Autowired
     private DropboxDirectoryService directoryService;
@@ -49,13 +48,46 @@ public class DropboxDirectoryServiceTest {
         assertEquals(directory.isUpdated(), savedDir.isUpdated());
         assertNotNull(savedDir.getLastCheck());
         assertNotNull(savedDir.getLastProcessed());
-        assertNotNull(savedDir.getModified());        
+        assertNotNull(savedDir.getModified());
+    }
+    
+    @Test
+    public void getUpdated() {
+        DropboxDirectory directory1 = createDirectory();
+        directory1.setUpdated(true);
+        
+        directoryService.save(directory1);
+        
+        DropboxDirectory directory2 = createDirectory();
+        directory2.setUpdated(false);
+        directoryService.save(directory2);
+        
+        List<DropboxDirectory> updatedDirectories = directoryService.getUpdateDirectories(1000);
+        
+        assertNotNull(updatedDirectories);
+        assertFalse(updatedDirectories.isEmpty());
+        
+        boolean isUpdatedPresent = false;
+        boolean isNotUpdatedPresent = false;
+        
+        for (DropboxDirectory dir : updatedDirectories) {
+            if (directory1.getId().equals(dir.getId())) {
+                isUpdatedPresent = true;
+            }
+            
+            if (directory2.getId().equals(dir.getId())) {
+                isNotUpdatedPresent = true;
+            }
+        }
+        
+        assertTrue(isUpdatedPresent);
+        assertFalse(isNotUpdatedPresent);
     }
     
     private DropboxDirectory createDirectory() {
         DropboxDirectory directory = new DropboxDirectory();
         directory.setAccountId(accountId);
-        directory.setDirectory(DEFAULT_DIR);
+        directory.setDirectory(UUID.randomUUID().toString());
         directory.setHash(String.valueOf((UUID.randomUUID().hashCode())));
         directory.setModified(new Date());
         directory.setLastCheck(new Date());
@@ -63,16 +95,6 @@ public class DropboxDirectoryServiceTest {
         directory.setUpdated(true);
         
         return directory;
-    }
-    
-    private DropboxAccount makeAccount() {
-        DropboxAccount account = new DropboxAccount();
-        account.setId(accountId);
-        account.setCountry("DK");
-        account.setEmail("test@test.com");
-        account.setName("Testme Alex");
-        
-        return account;
     }
 
     public DropboxDirectoryService getDirectoryService() {

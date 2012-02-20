@@ -11,5 +11,5 @@ public interface DropboxDirectoryDao {
     boolean exists(String id);
     List<DropboxDirectory> getDirectories(String accountId);
     List<DropboxDirectory> getUpdatedDirectories(String accountId);
-    List<DropboxDirectory> getUpdatedDirectories();
+    List<DropboxDirectory> getUpdatedDirectories(int limit);
 }

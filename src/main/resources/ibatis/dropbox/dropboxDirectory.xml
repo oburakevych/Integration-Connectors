@@ -44,6 +44,11 @@
         <include refid="getInternal"/>
         WHERE account_id = #accountId#
         	AND directory = #directory#
-    </select>    
+    </select>
+    
+	<select id="getAllUpdated" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap">
+        <include refid="getInternal"/>
+        WHERE is_updated = true
+    </select>
 
 </sqlMap>
