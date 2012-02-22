@@ -1,23 +1,26 @@
 package org.integration.connectors.dropbox.files;
 
+import java.util.Date;
+
 import org.integration.account.Account;
 import org.integration.connectors.dropbox.TradeshiftConnectorService;
 import org.integration.connectors.dropbox.directory.DropboxDirectory;
 import org.integration.connectors.dropbox.directory.DropboxDirectoryService;
 import org.integration.connectors.dropbox.exception.DropboxException;
-import org.integration.connectors.process.Executor;
+import org.integration.connectors.process.DirectoryExecutor;
 import org.integration.connectors.tradeshift.document.Dispatch;
 import org.integration.connectors.tradeshift.document.files.DocumentFile;
 import org.integration.connectors.tradeshift.document.files.DocumentFileList;
+import org.integration.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DropboxDirectoryExecutor implements Executor {
+public class DropboxDirectoryExecutor implements DirectoryExecutor {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
-    public static final String DEFAULT_DROPBOX_PATH = "";
+    public static final String DEFAULT_DROPBOX_PATH = DropboxDirectory.DEFAULT_REMOTE_DIRECTORY_NAME;
     public static final String TS_DIR = "/outbox";
     
     private DropboxFileService fileService;
@@ -25,45 +28,57 @@ public class DropboxDirectoryExecutor implements Executor {
     private DropboxDirectoryService directoryService;
 
     @Async
-    @Override
     public void run(Account account) {
         log.debug("A job will be run against default directory {}", DEFAULT_DROPBOX_PATH);
-        run(account, DEFAULT_DROPBOX_PATH);
-    }
-
-    public void run(Account account, String path) {
-        log.debug("Running a job");
-        
-        Entry directoryEntry = fileService.getMetadataEntry(account.getId(), path);
-        
-        processDirectory(account.getId(), directoryEntry);
+        run(account.getId(), DEFAULT_DROPBOX_PATH, Boolean.TRUE);
     }
     
-    protected void processDirectory(String accountId, Entry directory) {
-        if (directory == null || directory.getContents() == null 
-                || directory.getContents().isEmpty()) {
-            log.debug("Directory is empty");
+    @Async
+    public void run(DropboxDirectory directory) {
+        log.debug("A job will be run against directory {} for Account {}", directory.getId(), directory.getAccountId());
+        
+        Entry remoteDirEntry = run(directory.getAccountId(), directory.getName(), Boolean.FALSE);
+        
+        if (remoteDirEntry == null || remoteDirEntry.getContents() == null 
+                || remoteDirEntry.getContents().isEmpty()) {
+            log.warn("Directory {} is empty even though the hash has been modified to {}", directory.getId(), directory.getHash());
             return;
         }
         
-        log.debug("Found {} entries", directory.getContents().size());
+        directory.setModified(DateUtils.parseEntryDate(remoteDirEntry.getModified()));
+        directory.setLastCheck(new Date());
         
-        updateDirectory(accountId, directory);
-
-        /*
-        for(Entry file : directory.getContents()) {
+        for(Entry file : remoteDirEntry.getContents()) {
             log.debug("Processing entry {}", file.getName());
             
             if (file.isDir()) {
                 continue;
             }
             
-            processFile(accountId, file);
+            processFile(directory.getAccountId(), file);
         }
-        */
+
+        directory.setLastProcessed(new Date());
+        directory.setHash(remoteDirEntry.getHash());
+        directory.setUpdated(false);
+        directory.unlock();
+        
+        directoryService.save(directory);
+    }
+
+    public Entry run(String accountId, String path, boolean updateLocalDir) {
+        log.debug("Running a job");
+        
+        Entry directoryEntry = fileService.getMetadataEntry(accountId, path);
+        
+        if (updateLocalDir) {
+            updateLocalDirectory(accountId, directoryEntry);
+        }
+        
+        return directoryEntry;
     }
     
-    protected void updateDirectory(String accountId, Entry directoryEntry) {
+    protected void updateLocalDirectory(String accountId, Entry directoryEntry) {
         log.debug("Updating directory for Account {}", accountId);
         
         DropboxDirectory directory = directoryService.getDirectory(accountId, directoryEntry.getPath());
@@ -72,17 +87,19 @@ public class DropboxDirectoryExecutor implements Executor {
             log.info("There was no directory {} found for Account {}. Creating this directry...", directoryEntry.getPath(), accountId);
             directory = new DropboxDirectory(accountId, directoryEntry);
         }
+        
+        directory.setLastCheck(new Date());
 
         if (!directory.getHash().equalsIgnoreCase(directoryEntry.getHash())) {
             directory.setUpdated(true);
             
             log.info("Directory has been updated since last check on {}", directory.getLastCheck());
             log.info("Directory's old hash: {}\nDirectory's new hash: {}", directory.getHash(), directoryEntry.getHash());
+            
+            log.debug("Saving the directory: {}", directory);
+            
+            directoryService.save(directory);
         }
-                
-        log.debug("Saving directory: {}", directory);
-        
-        directoryService.save(directory);
     }
     
     protected void processFile(String accountId, Entry file) {
@@ -95,7 +112,7 @@ public class DropboxDirectoryExecutor implements Executor {
             }
             
             dispatch(accountId, df.getFileName(), df.getMimeType(), df.getContents());
-            Thread.sleep(3000);
+            Thread.sleep(6000);
             Dispatch dispaychResult = getDispatchResult(accountId, df.getFileName());
             
             if (dispaychResult != null && dispaychResult.getDispatchState() != null) {
@@ -113,12 +130,18 @@ public class DropboxDirectoryExecutor implements Executor {
                 case COMPLETED:
                     log.info("Dispatch of the file {} has been COMPLETED successfully for account {}", df.getFileName(), accountId);
                     fileService.move(accountId, file.getPath(), "sent/" + file.getName());
-                default:
                     break;
+                default:
+                    log.error("Invalid Dispatch result state " + dispaychResult.getDispatchState() 
+                            + " received for the file " + df.getFileName() 
+                            + " dispatched for the Account " + accountId);
+                    //TODO: introduce a Tradeshift specific exception for this type of errors
+                    throw new Exception("Invalid Dispatch result state " + dispaychResult.getDispatchState());
                 }
             }
         } catch (Exception e) {
             log.error("Exception processing file " + file.getPath() + " for Account " + accountId, e);
+            //TODO: save entry and the error into the DB to email/show it to the user
         }
             
     }

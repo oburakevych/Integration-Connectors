@@ -27,15 +27,45 @@ public class DropboxDirectoryService {
         log.debug("Directory saved.");
     }
     
-    public DropboxDirectory getDirectory(String id) {
-        log.debug("Getting a directory which ID is {}", id);
-        return directoryDao.getDirectory(id);
+    public void delete(String accountId, String id) throws Exception {
+        log.trace("Trying to delete directory {} for Account {}", id, accountId);
+        
+        DropboxDirectory existingDir = directoryDao.getDirectory(id, false);
+        
+        if (existingDir == null) {
+            //TODO: introduce a new exception type
+            throw new Exception("Cannot delete directory " + id + ". Directory does not exists!");
+        }
+        
+        if (!accountId.equals(existingDir.getAccountId())) {
+            //TODO: introduce a new exception type
+            throw new Exception("Cannot delete directory " + id + ". It belongs to a different Account " + existingDir.getAccountId());
+        }
+            
+        directoryDao.delete(id);
+        
+        log.warn("Directory {} deleted!", id);
+    }
+    
+    public void delete(DropboxDirectory directory) throws Exception {
+        delete(directory.getAccountId(), directory.getId());
+    }
+    
+    public DropboxDirectory getDirectory(String id, boolean lock) {
+        log.debug("Getting a directory {}, lock status {}", id, lock);
+        return directoryDao.getDirectory(id, lock);
     }
     
     public DropboxDirectory getDirectory(String accountId, String dir) {
         log.debug("Getting a directory {} for Account {}", dir, accountId);
         return directoryDao.getDirectory(accountId, dir);
     }
+    
+    public List<DropboxDirectory> getDirectories(int limit) {
+        log.debug("Getting all directories limited to {}", limit);
+        
+        return directoryDao.getDirectories(limit);
+    }    
     
     public List<DropboxDirectory> getDirectories(String accountId) {
         log.debug("Getting directories for Account {}", accountId);
@@ -48,9 +78,17 @@ public class DropboxDirectoryService {
         return directoryDao.exists(accountId);
     }
     
-    public List<DropboxDirectory> getUpdateDirectories(int limit) {
-        log.debug("Getting all updated directories limited to {} entries", limit);
-        return directoryDao.getUpdatedDirectories(limit);
+    public List<DropboxDirectory> getUpdatedDirectories(String lockedBy) {
+        log.debug("Getting updated directories locked by {}", lockedBy);
+        return directoryDao.getUpdatedDirectories(lockedBy);
+    }
+    
+    public List<DropboxDirectory> lockUpdatedDirectories(String lockBy, int limit) {
+        log.trace("Locking updated directories by {} limited to {}", lockBy, limit);
+        
+        directoryDao.lockUpdatedDirectories(lockBy, limit);
+        
+        return getUpdatedDirectories(lockBy);
     }
 
 }

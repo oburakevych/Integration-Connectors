@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+
 
 public class DateUtils extends org.apache.commons.lang.time.DateUtils{
     private static final DateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss ZZZZZ", Locale.US);
@@ -18,10 +20,14 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils{
      * @return a {@link Date}.
      */
     public static Date parseEntryDate(String date) {
-        try {
-            return dateFormat.parse(date);
-        } catch (java.text.ParseException e) {
-            return null;
+        if (StringUtils.isNotBlank(date)) {
+            try {
+                return dateFormat.parse(date);
+            } catch (java.text.ParseException e) {
+                return null;
+            }
         }
+        
+        return null;
     }
 }

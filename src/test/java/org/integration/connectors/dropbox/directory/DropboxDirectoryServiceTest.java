@@ -21,12 +21,12 @@ public class DropboxDirectoryServiceTest {
     private DropboxDirectoryService directoryService;
     
     @Test
-    public void saveUpdateGetDirectorytest() {
+    public void saveUpdateGetDeleteDirectorytest() throws Exception {
         DropboxDirectory directory = createDirectory();
         
         directoryService.save(directory);
         
-        DropboxDirectory savedDir = directoryService.getDirectory(directory.getId());
+        DropboxDirectory savedDir = directoryService.getDirectory(directory.getId(), false);
         
         assertNotNull(savedDir);
         assertEquals(directory.getId(), savedDir.getId());
@@ -49,10 +49,16 @@ public class DropboxDirectoryServiceTest {
         assertNotNull(savedDir.getLastCheck());
         assertNotNull(savedDir.getLastProcessed());
         assertNotNull(savedDir.getModified());
+        
+        directoryService.delete(savedDir);
+        
+        savedDir = directoryService.getDirectory(directory.getId(), false);
+        
+        assertNull(savedDir);
     }
     
     @Test
-    public void getUpdated() {
+    public void getUpdated() throws Exception {
         DropboxDirectory directory1 = createDirectory();
         directory1.setUpdated(true);
         
@@ -62,7 +68,9 @@ public class DropboxDirectoryServiceTest {
         directory2.setUpdated(false);
         directoryService.save(directory2);
         
-        List<DropboxDirectory> updatedDirectories = directoryService.getUpdateDirectories(1000);
+        final String lockBy = UUID.randomUUID().toString();
+        
+        List<DropboxDirectory> updatedDirectories = directoryService.lockUpdatedDirectories(lockBy, 20);
         
         assertNotNull(updatedDirectories);
         assertFalse(updatedDirectories.isEmpty());
@@ -72,16 +80,27 @@ public class DropboxDirectoryServiceTest {
         
         for (DropboxDirectory dir : updatedDirectories) {
             if (directory1.getId().equals(dir.getId())) {
+                assertEquals(lockBy, dir.getLockedBy());
                 isUpdatedPresent = true;
             }
             
             if (directory2.getId().equals(dir.getId())) {
+                assertNull(dir.getLockedBy());
                 isNotUpdatedPresent = true;
             }
         }
         
         assertTrue(isUpdatedPresent);
         assertFalse(isNotUpdatedPresent);
+        
+        directoryService.delete(directory1);
+        directoryService.delete(directory2);
+        
+        directory1 = directoryService.getDirectory(directory1.getId(), false);
+        directory2 = directoryService.getDirectory(directory2.getId(), false);
+        
+        assertNull(directory1);
+        assertNull(directory2);
     }
     
     private DropboxDirectory createDirectory() {

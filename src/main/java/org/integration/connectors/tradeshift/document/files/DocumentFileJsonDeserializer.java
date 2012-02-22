@@ -1,9 +1,7 @@
 package org.integration.connectors.tradeshift.document.files;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
@@ -11,7 +9,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.integration.connectors.dropbox.files.Entry;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = DocumentFileJsonDeserializer.DocumentFileListDeserializer.class)

@@ -28,8 +28,10 @@ CREATE TABLE dropbox_directory (
   last_check TIMESTAMP,
   last_processed TIMESTAMP,
   is_updated BOOLEAN DEFAULT TRUE,
+  locked_by VARCHAR(40),
   CONSTRAINT FOREIGN KEY 
     dropbox_hash_access_token_fk (account_id) 
     REFERENCES dropbox_access_token (account_id),
-  CONSTRAINT UNIQUE INDEX dropbox_dir_account_index (account_id, directory)
+  CONSTRAINT UNIQUE INDEX dropbox_dir_account_index (account_id, directory),
+  INDEX dropbox_dir_locked_updated_index (locked_by)
 ) ENGINE=InnoDB;

@@ -3,10 +3,12 @@ package org.integration.connectors.dropbox.directory;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.integration.connectors.dropbox.files.Entry;
 import org.integration.util.DateUtils;
 
 public class DropboxDirectory {
+    public static final String DEFAULT_REMOTE_DIRECTORY_NAME = "";
     private String id;
     private String accountId;
     private String directory;
@@ -15,6 +17,7 @@ public class DropboxDirectory {
     private Date lastCheck;
     private Date lastProcessed;
     private boolean isUpdated;
+    private String lockedBy;
     
     public DropboxDirectory() {
         this.id = UUID.randomUUID().toString();
@@ -79,6 +82,19 @@ public class DropboxDirectory {
         return lastCheck;
     }
     
+    public String getName() {
+        if (directory == null) {
+            return StringUtils.EMPTY;
+        }
+        
+        int ind = directory.lastIndexOf('/');
+        return directory.substring(ind + 1, directory.length());
+    }
+    
+    public void unlock() {
+        setLockedBy(null);
+    }
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("\nDropboxDirectory: ");
@@ -91,6 +107,7 @@ public class DropboxDirectory {
         builder.append("\n\t\tlastCheck: " + getLastCheck());
         builder.append("\n\t\tlastProcessed: " + getLastProcessed());
         builder.append("\n\t\tisUpdated: " + isUpdated());
+        builder.append("\n\t\tlockedBy: " + getLockedBy());
         builder.append("\n\t}");
         
         return builder.toString();
@@ -110,5 +127,13 @@ public class DropboxDirectory {
 
     public String getAccountId() {
         return accountId;
+    }
+
+    public void setLockedBy(String lockedBy) {
+        this.lockedBy = lockedBy;
+    }
+
+    public String getLockedBy() {
+        return lockedBy;
     }
 }

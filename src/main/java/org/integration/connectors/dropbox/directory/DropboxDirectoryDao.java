@@ -5,11 +5,13 @@ import java.util.List;
 public interface DropboxDirectoryDao {
     void save(DropboxDirectory directory);
     void update(DropboxDirectory directory);
-    DropboxDirectory getDirectory(String id);
+    void delete(String id);
+    DropboxDirectory getDirectory(String id, Boolean lock);
     DropboxDirectory getDirectory(String accountId, String directory);
     boolean existsAny(String accountId);
     boolean exists(String id);
     List<DropboxDirectory> getDirectories(String accountId);
-    List<DropboxDirectory> getUpdatedDirectories(String accountId);
-    List<DropboxDirectory> getUpdatedDirectories(int limit);
+    List<DropboxDirectory> getDirectories(int limit);
+    List<DropboxDirectory> getUpdatedDirectories(String lockedBy);
+    void lockUpdatedDirectories(String lockBy, Integer limit);
 }

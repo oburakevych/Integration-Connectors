@@ -3,6 +3,15 @@
 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="DropboxDirectory">
     <typeAlias type="org.integration.connectors.dropbox.directory.DropboxDirectory" alias="DropboxDirectory" />
+    
+	<cacheModel id="DropboxDirectoryGetCache" type="LRU" readOnly="true">
+        <flushInterval hours="1"/>
+        <flushOnExecute statement="DropboxDirectory.create"/>
+        <flushOnExecute statement="DropboxDirectory.update"/>
+        <flushOnExecute statement="DropboxDirectory.deleteById"/>
+        <flushOnExecute statement="DropboxDirectory.lockUpdated"/>
+        <property name="cache-size" value="1000"/>
+    </cacheModel>
 
     <resultMap id="DropboxDirectoryMap" class="DropboxDirectory">
     	<result property="id" column="id" />
@@ -13,42 +22,63 @@
         <result property="lastCheck" column="last_check" />
         <result property="lastProcessed" column="last_processed" />
         <result property="isUpdated" column="is_updated" />
+        <result property="lockedBy" column="locked_by"/>
     </resultMap>
 
     <insert id="create" parameterClass="DropboxDirectory">
-        INSERT INTO dropbox_directory(id, account_id, directory, hash, modified, last_check, last_processed, is_updated) 
-        					VALUES (#id#, #accountId#, #directory#, #hash#, #modified:TIMESTAMP#, #lastCheck:TIMESTAMP#, #lastProcessed:TIMESTAMP#, #isUpdated:BOOLEAN#)
+        INSERT INTO dropbox_directory(id, account_id, directory, hash, modified, last_check, last_processed, is_updated, locked_by) 
+        					VALUES (#id#, #accountId#, #directory#, #hash#, #modified:TIMESTAMP#, #lastCheck:TIMESTAMP#, #lastProcessed:TIMESTAMP#, #isUpdated:BOOLEAN#, #lockedBy#)
     </insert>
     
 	<update id="update" parameterClass="DropboxDirectory">
         UPDATE dropbox_directory
-        SET hash=#hash#, modified=#modified:TIMESTAMP#, last_check=NOW(), last_processed=#lastProcessed:TIMESTAMP#, is_updated=#isUpdated:BOOLEAN#
+        SET hash=#hash#, modified=#modified:TIMESTAMP#, last_check=#lastCheck:TIMESTAMP#, last_processed=#lastProcessed:TIMESTAMP#, is_updated=#isUpdated:BOOLEAN#, locked_by=#lockedBy#
         WHERE id = #id#
+    </update>
+    
+	<update id="lockUpdated" parameterClass="java.util.Map">
+        UPDATE dropbox_directory
+        SET locked_by=#lockBy#
+        WHERE is_updated = 1
+        	AND locked_by IS null
+        LIMIT #limit#
+    </update>
+    
+	<update id="deleteById" parameterClass="String">
+		DELETE FROM dropbox_directory WHERE id = #id#
     </update>
     
     <sql id="getInternal">
         SELECT * FROM dropbox_directory
     </sql>
-    
-    <select id="getByAccount" parameterClass="String" resultMap="DropboxDirectoryMap">
+
+    <select id="getAll" resultMap="DropboxDirectoryMap">
+        <include refid="getInternal"/>
+    </select>
+
+    <select id="getByAccount" parameterClass="String" resultMap="DropboxDirectoryMap" cacheModel="DropboxDirectoryGetCache">
         <include refid="getInternal"/>
         WHERE account_id = #accountId#
     </select>
     
-    <select id="getById" parameterClass="String" resultMap="DropboxDirectoryMap">
-        <include refid="getInternal"/>
-        WHERE id = #id#
+    <select id="getById" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap">
+    	<include refid="getInternal"/>
+        WHERE id = #id# 
+    	<isGreaterThan property="lock" compareValue="0">
+        	FOR UPDATE
+        </isGreaterThan>
     </select>
     
-    <select id="getByAccountAndDir" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap">
+    <select id="getByAccountAndDir" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap" cacheModel="DropboxDirectoryGetCache">
         <include refid="getInternal"/>
         WHERE account_id = #accountId#
         	AND directory = #directory#
     </select>
     
-	<select id="getAllUpdated" parameterClass="java.util.Map" resultMap="DropboxDirectoryMap">
+    <select id="getUpdatedLockedDirs" parameterClass="String" resultMap="DropboxDirectoryMap">
         <include refid="getInternal"/>
-        WHERE is_updated = true
+        WHERE locked_by = #lockedBy#
+        	AND is_updated = 1
     </select>
 
 </sqlMap>
