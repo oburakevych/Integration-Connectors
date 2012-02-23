@@ -13,24 +13,32 @@
      http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
  	<task:annotation-driven scheduler="dropboxScheduler"/> 
-	<task:scheduler id="dropboxScheduler" pool-size="50"/>
+	<task:scheduler id="dropboxScheduler" pool-size="60"/>
      
 	<task:scheduled-tasks scheduler="dropboxScheduler">
     	<task:scheduled ref="dropboxDirectoryScheduler" method="processRemote" fixed-rate="60000"/>
     	<task:scheduled ref="dropboxDirectoryScheduler" method="processLocal" fixed-delay="10000"/>
 	</task:scheduled-tasks>
       
-	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.files.DropboxDirectoryCheckShceduler">
-     	<property name="remoteExecutor" ref="dropboxDirectoryExecutor"/>
+	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.directory.DropboxDirectoryCheckShceduler">
+     	<property name="remoteExecutor" ref="dropboxDirectoryAsyncExecutor"/>
      	<property name="accountService" ref="dropboxAccountService"/>
      	<property name="directoryService" ref="dropboxDirectoryService"/>
-     	<property name="limit" value="20"/>
+     	<property name="limitRemote" value="100"/>
+     	<property name="limitLocal" value="20"/>
      </bean>
      
-     <bean id="dropboxDirectoryExecutor" class="org.integration.connectors.dropbox.files.DropboxDirectoryExecutor">
+     <bean id="dropboxDirectoryAsyncExecutor" class="org.integration.connectors.dropbox.directory.DropboxDirectoryAsyncExecutor">
      	<property name="fileService" ref="dropboxFileService"/>
      	<property name="directoryService" ref="dropboxDirectoryService"/>
      	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
+     	<property name="dispatchResultAsyncExecutor" ref="dropboxDocumentFileDispatchResultAsyncExecutor"/>
+     </bean>
+     
+     <bean id="dropboxDocumentFileDispatchResultAsyncExecutor" class="org.integration.connectors.dropbox.files.DropboxDocumentFileDispatchResultExecutor">
+     	<property name="fileService" ref="dropboxFileService"/>
+     	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
+     	<property name="dispatchStatusTimeout" value="30000"/>
      </bean>
 
 	<bean id="documentFactory" class="org.integration.connectors.tradeshift.document.DocumentFactory" />

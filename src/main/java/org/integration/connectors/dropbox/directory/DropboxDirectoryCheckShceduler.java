@@ -1,4 +1,4 @@
-package org.integration.connectors.dropbox.files;
+package org.integration.connectors.dropbox.directory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -7,8 +7,6 @@ import java.util.UUID;
 
 import org.integration.connectors.dropbox.account.DropboxAccount;
 import org.integration.connectors.dropbox.account.DropboxAccountService;
-import org.integration.connectors.dropbox.directory.DropboxDirectory;
-import org.integration.connectors.dropbox.directory.DropboxDirectoryService;
 import org.integration.connectors.process.DirectoryExecutor;
 import org.integration.connectors.process.Scheduler;
 import org.slf4j.Logger;
@@ -21,11 +19,12 @@ public class DropboxDirectoryCheckShceduler implements Scheduler {
     private DropboxAccountService accountService;
     private DropboxDirectoryService directoryService;
     
-    private int limit = 100;
+    private int limitRemote;
+    private int limitLocal;
     
     @Override
     public void processRemote() {
-        List<DropboxAccount> accounts = accountService.getAccounts(limit);
+        List<DropboxAccount> accounts = accountService.getAccounts(limitRemote);
         
         log.debug("Found {} accounts", accounts.size());
         Calendar begin = Calendar.getInstance();
@@ -44,7 +43,7 @@ public class DropboxDirectoryCheckShceduler implements Scheduler {
         final String lockBy = UUID.randomUUID().toString();
         
         synchronized (directoryService) {
-            updatedDirectories = directoryService.lockUpdatedDirectories(lockBy, limit);   
+            updatedDirectories = directoryService.lockUpdatedDirectories(lockBy, limitLocal);   
         }
         
         log.info("Found {} updated directories", updatedDirectories.size());
@@ -70,14 +69,6 @@ public class DropboxDirectoryCheckShceduler implements Scheduler {
         this.accountService = accountService;
     }
 
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
     public DropboxDirectoryService getDirectoryService() {
         return directoryService;
     }
@@ -92,5 +83,21 @@ public class DropboxDirectoryCheckShceduler implements Scheduler {
 
     public void setRemoteExecutor(DirectoryExecutor remoteExecutor) {
         this.remoteExecutor = remoteExecutor;
+    }
+
+    public void setLimitRemote(int limitRemote) {
+        this.limitRemote = limitRemote;
+    }
+
+    public int getLimitRemote() {
+        return limitRemote;
+    }
+
+    public void setLimitLocal(int limitLocal) {
+        this.limitLocal = limitLocal;
+    }
+
+    public int getLimitLocal() {
+        return limitLocal;
     }
 }

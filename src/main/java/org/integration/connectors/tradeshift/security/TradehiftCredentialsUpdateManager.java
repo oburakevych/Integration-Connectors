@@ -66,7 +66,7 @@ public class TradehiftCredentialsUpdateManager {
 				
 				OAuthToken credentials = null;
 				
-		        synchronized(this) {    				
+		        synchronized(this) {
 		            wait(waitTimeout);
 		            if (tsCredentialsStorage.exists(companyAccountId)) {
 		                log.trace("Detected credentials update: [companyAccountId: {}, credentials: {}", companyAccountId, credentials);

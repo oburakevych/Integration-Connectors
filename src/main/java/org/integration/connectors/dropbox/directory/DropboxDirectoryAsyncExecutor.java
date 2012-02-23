@@ -1,24 +1,25 @@
-package org.integration.connectors.dropbox.files;
+package org.integration.connectors.dropbox.directory;
 
 import java.util.Date;
 
 import org.integration.account.Account;
 import org.integration.connectors.dropbox.TradeshiftConnectorService;
-import org.integration.connectors.dropbox.directory.DropboxDirectory;
-import org.integration.connectors.dropbox.directory.DropboxDirectoryService;
 import org.integration.connectors.dropbox.exception.DropboxException;
+import org.integration.connectors.dropbox.files.DropboxFile;
+import org.integration.connectors.dropbox.files.DropboxFileService;
+import org.integration.connectors.dropbox.files.Entry;
 import org.integration.connectors.process.DirectoryExecutor;
-import org.integration.connectors.tradeshift.document.Dispatch;
-import org.integration.connectors.tradeshift.document.files.DocumentFile;
-import org.integration.connectors.tradeshift.document.files.DocumentFileList;
+import org.integration.connectors.process.DispatchResultExecutor;
 import org.integration.util.DateUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DropboxDirectoryExecutor implements DirectoryExecutor {
+public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
     public static final String DEFAULT_DROPBOX_PATH = DropboxDirectory.DEFAULT_REMOTE_DIRECTORY_NAME;
     public static final String TS_DIR = "/outbox";
@@ -26,6 +27,7 @@ public class DropboxDirectoryExecutor implements DirectoryExecutor {
     private DropboxFileService fileService;
     private TradeshiftConnectorService tradeshiftService;
     private DropboxDirectoryService directoryService;
+    private DispatchResultExecutor dispatchResultAsyncExecutor;
 
     @Async
     public void run(Account account) {
@@ -112,33 +114,10 @@ public class DropboxDirectoryExecutor implements DirectoryExecutor {
             }
             
             dispatch(accountId, df.getFileName(), df.getMimeType(), df.getContents());
-            Thread.sleep(6000);
-            Dispatch dispaychResult = getDispatchResult(accountId, df.getFileName());
             
-            if (dispaychResult != null && dispaychResult.getDispatchState() != null) {
-                switch (dispaychResult.getDispatchState()) {
-                case ACCEPTED:
-                    log.info("Dispatch of the file {} has been ACCEPTED for Account {}", df.getFileName(), accountId);                    
-                    break;
-                case FAILED:
-                    log.warn("Dispatch of the file {} FAILED for Account {}", df.getFileName(), accountId);
-                    Entry metadata = fileService.move(accountId, file.getPath(), "failed/" + file.getName());
-                    
-                    fileService.createFile(accountId, metadata.getPath() + ".error.txt", "text/plain", dispaychResult.getFailureMessage().getBytes());
-                    
-                    break;
-                case COMPLETED:
-                    log.info("Dispatch of the file {} has been COMPLETED successfully for account {}", df.getFileName(), accountId);
-                    fileService.move(accountId, file.getPath(), "sent/" + file.getName());
-                    break;
-                default:
-                    log.error("Invalid Dispatch result state " + dispaychResult.getDispatchState() 
-                            + " received for the file " + df.getFileName() 
-                            + " dispatched for the Account " + accountId);
-                    //TODO: introduce a Tradeshift specific exception for this type of errors
-                    throw new Exception("Invalid Dispatch result state " + dispaychResult.getDispatchState());
-                }
-            }
+            log.debug("File {} has been dispatched, starting an async process to handle dispatch status", df.getFileName());
+            
+            dispatchResultAsyncExecutor.process(accountId, df);
         } catch (Exception e) {
             log.error("Exception processing file " + file.getPath() + " for Account " + accountId, e);
             //TODO: save entry and the error into the DB to email/show it to the user
@@ -149,30 +128,6 @@ public class DropboxDirectoryExecutor implements DirectoryExecutor {
     protected void dispatch(String accountId, String fileName, String mimeType, byte[] document) {
         tradeshiftService.transferDocumentFile(accountId, TS_DIR, fileName, mimeType, document);
         tradeshiftService.dispatchDocumentFile(accountId, TS_DIR, fileName);
-    }
-    
-    protected Dispatch getDispatchResult(String accountId, String filename) {
-        DocumentFileList dfList = tradeshiftService.getDocumentFiles(accountId, null, 1, 0, null, null, filename);
-        
-        if (dfList != null && dfList.getItems() != null && !dfList.getItems().isEmpty()) {
-            log.debug("Document Files size is {}", dfList.getItems().size());
-            for (DocumentFile df : dfList.getItems()) {
-                log.debug("Requesting dispatch status of the file {}", df.getFilename());
-                Dispatch dispatch = tradeshiftService.getLatestDispatch(accountId, df.getDocumentId());
-                
-                log.debug("Dispatch status {}", dispatch.getDispatchState());
-                
-                return dispatch;
-            }
-        } else {
-            log.warn("The are no files!");
-        }
-        
-        return null;
-    }
-    
-    protected void handleDispatchStatus(String accountId, String fileName) {
-        
     }
 
     public DropboxFileService getFileService() {
@@ -199,4 +154,11 @@ public class DropboxDirectoryExecutor implements DirectoryExecutor {
         return directoryService;
     }
 
+    public DispatchResultExecutor getDispatchResultAsyncExecutor() {
+        return dispatchResultAsyncExecutor;
+    }
+
+    public void setDispatchResultAsyncExecutor(DispatchResultExecutor dispatchResultAsyncExecutor) {
+        this.dispatchResultAsyncExecutor = dispatchResultAsyncExecutor;
+    }
 }
