@@ -1,6 +1,7 @@
 package org.integration.connectors.dropbox.files;
 
 import org.integration.connectors.dropbox.TradeshiftConnectorService;
+import org.integration.connectors.log.FileTransferLogService;
 import org.integration.connectors.process.DispatchResultExecutor;
 import org.integration.connectors.tradeshift.document.Dispatch;
 import org.integration.connectors.tradeshift.document.files.DocumentFile;
@@ -22,17 +23,18 @@ public class DropboxDocumentFileDispatchResultExecutor implements DispatchResult
     
     private TradeshiftConnectorService tradeshiftService;
     private DropboxFileService fileService;
+    private FileTransferLogService logService;
     private int dispatchStatusTimeout;
     
     @Override
     @Async
     public Entry process(String accountId, DropboxFile df) {
-        log.debug("Processing file {} for Account {}", df.getFileName(), accountId);
+        log.debug("Processing file {} for Account {}", df.getName(), accountId);
         
         Entry metadata = null;
         
         try {
-            Dispatch dispaychResult = getDispatchResult(accountId, df.getFileName());
+            Dispatch dispaychResult = getDispatchResult(accountId, df.getName());
             
             if (dispaychResult == null || dispaychResult.getDispatchState() == null) {
                 //TODO: process error state
@@ -40,28 +42,32 @@ public class DropboxDocumentFileDispatchResultExecutor implements DispatchResult
                 
             switch (dispaychResult.getDispatchState()) {
             case ACCEPTED:
-                log.info("Dispatch of the file {} has been ACCEPTED for Account {}", df.getFileName(), accountId);                    
+                log.info("Dispatch of the file {} has been ACCEPTED for Account {}", df.getName(), accountId);
+                logService.save(df.getId(), "File was accepted by Tradeshift for the dispatch");
                 break;
             case FAILED:
-                log.warn("Dispatch of the file {} FAILED for Account {}", df.getFileName(), accountId);
-                metadata = fileService.move(accountId, df.getMetadata().getPath(), ERROR.getPath() + separator + df.getFileName());
+                log.warn("Dispatch of the file {} FAILED for Account {}", df.getName(), accountId);
+                logService.save(df.getId(), "File failed to be dispatched by Tradeshift");
+                metadata = fileService.move(accountId, df.getId(), df.getMetadata().getPath(), ERROR.getPath() + separator + df.getName());
                 
-                fileService.createFile(accountId, metadata.getPath() + ".error.txt", "text/plain", dispaychResult.getFailureMessage().getBytes());
+                fileService.createFile(accountId, df.getId(), metadata.getPath() + ".error.txt", "text/plain", dispaychResult.getFailureMessage().getBytes());
                 break;
             case COMPLETED:
-                log.info("Dispatch of the file {} has been COMPLETED successfully for account {}", df.getFileName(), accountId);
-                
-                metadata = fileService.move(accountId, df.getMetadata().getPath(), SENT.getPath() + separator + df.getFileName());
+                log.info("Dispatch of the file {} has been COMPLETED successfully for account {}", df.getName(), accountId);
+                logService.save(df.getId(), "File was successfully dispatched by Tradeshift");
+                metadata = fileService.move(accountId, df.getId(), df.getMetadata().getPath(), SENT.getPath() + separator + df.getName());
                 break;
             default:
                 log.error("Invalid Dispatch result state " + dispaychResult.getDispatchState() 
-                        + " received for the file " + df.getFileName() 
+                        + " received for the file " + df.getName() 
                         + " dispatched for the Account " + accountId);
+                logService.save(df.getId(), "Error tracking dispatch status of the file. Unknown status " + dispaychResult.getDispatchState() + " received from Tradeshift");
                 //TODO: introduce a Tradeshift specific exception for this type of errors
                 throw new Exception("Invalid Dispatch result state " + dispaychResult.getDispatchState());
             }
         } catch (Exception e) {
             log.error("Exception processing file " + df.getMetadata().getPath() + " for Account " + accountId, e);
+            logService.save(df.getId(), "Error tracking dispatch status of the file. " + e.getMessage().substring(0, 800));
             //TODO: save entry and the error into the DB to email/show it to the user
         }
 
@@ -149,5 +155,13 @@ public class DropboxDocumentFileDispatchResultExecutor implements DispatchResult
 
     public void setDispatchStatusTimeout(int dispatchStatusTimeout) {
         this.dispatchStatusTimeout = dispatchStatusTimeout;
+    }
+
+    public void setLogService(FileTransferLogService logService) {
+        this.logService = logService;
+    }
+
+    public FileTransferLogService getLogService() {
+        return logService;
     }
 }

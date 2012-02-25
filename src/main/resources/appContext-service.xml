@@ -38,6 +38,7 @@
      <bean id="dropboxDocumentFileDispatchResultAsyncExecutor" class="org.integration.connectors.dropbox.files.DropboxDocumentFileDispatchResultExecutor">
      	<property name="fileService" ref="dropboxFileService"/>
      	<property name="tradeshiftService" ref="dropboxTsConnectorService"/>
+     	<property name="logService" ref="fileTransferLogService"/>
      	<property name="dispatchStatusTimeout" value="30000"/>
      </bean>
 
@@ -50,6 +51,7 @@
 	
 	<bean id="dropboxTsConnectorService" class="org.integration.connectors.dropbox.TradeshiftConnectorService" >
 		<property name="tradeshiftApiService" ref="ws.tradeshift.service"/>
+		<property name="logService" ref="fileTransferLogService"/>
 	</bean>
 	
 	<bean id="dropboxAuthorisationService" class="org.integration.connectors.dropbox.security.DropboxAuthorisationService">
@@ -62,7 +64,9 @@
 	</bean>
 	
 	<bean id="dropboxFileService" class="org.integration.connectors.dropbox.files.DropboxFileService">
-		<property name="apiService" ref="ws.dropbox.service"/>
+		<constructor-arg name="fileDao" ref="dropboxFileDao"/>
+		<constructor-arg name="apiService" ref="ws.dropbox.service"/>
+		<property name="logService" ref="fileTransferLogService"/>
 		<property name="root" value="${dropbox.files.root}"/>
 	</bean>
 	
@@ -77,5 +81,9 @@
 	
 	<bean id="tradeshiftSecurityService" class="org.integration.connectors.tradeshift.security.TradeshiftSecurityService">
 		<constructor-arg name="creadentialStorage" ref="tsCredentialsStorage"/>
+	</bean>
+	
+	<bean id="fileTransferLogService" class="org.integration.connectors.log.FileTransferLogService">
+		<constructor-arg name="logDao" ref="fileTransferLogDao"/>
 	</bean>
 </beans>

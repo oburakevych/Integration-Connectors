@@ -57,7 +57,7 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
                 continue;
             }
             
-            processFile(directory.getAccountId(), file);
+            processFile(directory, file);
         }
 
         directory.setLastProcessed(new Date());
@@ -85,14 +85,17 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
         
         DropboxDirectory directory = directoryService.getDirectory(accountId, directoryEntry.getPath());
         
+        boolean isNewDir = false;
+        
         if (directory == null) {
             log.info("There was no directory {} found for Account {}. Creating this directry...", directoryEntry.getPath(), accountId);
+            isNewDir = true;
             directory = new DropboxDirectory(accountId, directoryEntry);
         }
         
         directory.setLastCheck(new Date());
 
-        if (!directory.getHash().equalsIgnoreCase(directoryEntry.getHash())) {
+        if (!directory.getHash().equalsIgnoreCase(directoryEntry.getHash()) || isNewDir) {
             directory.setUpdated(true);
             
             log.info("Directory has been updated since last check on {}", directory.getLastCheck());
@@ -104,30 +107,34 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
         }
     }
     
-    protected void processFile(String accountId, Entry file) {
+    protected void processFile(DropboxDirectory directory, Entry file) {
         log.debug("Processing file {}", file.getPath());
         try {
-            DropboxFile df = fileService.getFile(accountId, file.getPath());
+            DropboxFile df = fileService.getFile(directory, file.getPath());            
             
             if (df == null || df.getContents() == null || df.getContents().length < 1) {
-                throw new DropboxException("Corrupted file " + file.getPath() + " for Account " + accountId);
+                throw new DropboxException("Corrupted file " + file.getPath() + " for Account " + directory.getAccountId());
             }
             
-            dispatch(accountId, df.getFileName(), df.getMimeType(), df.getContents());
+            if (df.getDirectoryId() == null) {
+                df.setDirectoryId(directory.getId());
+            }
             
-            log.debug("File {} has been dispatched, starting an async process to handle dispatch status", df.getFileName());
+            dispatch(directory.getAccountId(), df);
             
-            dispatchResultAsyncExecutor.process(accountId, df);
+            log.debug("File {} has been dispatched, starting an async process to handle dispatch status", df.getName());
+            
+            dispatchResultAsyncExecutor.process(directory.getAccountId(), df);
         } catch (Exception e) {
-            log.error("Exception processing file " + file.getPath() + " for Account " + accountId, e);
+            log.error("Exception processing file " + file.getPath() + " for Account " + directory.getAccountId(), e);
             //TODO: save entry and the error into the DB to email/show it to the user
         }
             
     }
     
-    protected void dispatch(String accountId, String fileName, String mimeType, byte[] document) {
-        tradeshiftService.transferDocumentFile(accountId, TS_DIR, fileName, mimeType, document);
-        tradeshiftService.dispatchDocumentFile(accountId, TS_DIR, fileName);
+    protected void dispatch(String accountId, DropboxFile file) {
+        tradeshiftService.transferDocumentFile(accountId, file.getId(), TS_DIR, file.getName(), file.getMimeType(), file.getContents());
+        tradeshiftService.dispatchDocumentFile(accountId, file.getId(), TS_DIR, file.getName());
     }
 
     public DropboxFileService getFileService() {

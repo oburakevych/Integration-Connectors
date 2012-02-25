@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FileTransferLog">
+    <typeAlias type="org.integration.connectors.log.FileTransferLog" alias="Log" />
+
+    <resultMap id="LogMap" class="Log">
+    	<result property="id" column="id" />
+        <result property="fileId" column="file_id" />
+        <result property="date" column="date" />
+        <result property="comment" column="comments" />
+    </resultMap>
+
+    <insert id="create" parameterClass="Log">
+        INSERT INTO file_transfer_log(id, file_id, date, comments) 
+							VALUES (#id#, #fileId#, #date:TIMESTAMP#, #comment#)
+    </insert>
+    
+	<update id="deleteById" parameterClass="String">
+		DELETE FROM file_transfer_log WHERE id = #id#
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM file_transfer_log
+    </sql>
+
+    <select id="getAll" resultMap="LogMap">
+        <include refid="getInternal"/>
+    </select>
+    
+    <select id="getById" parameterClass="String" resultMap="LogMap">
+    	<include refid="getInternal"/>
+        WHERE id = #id# 
+    </select>
+    
+	<select id="getByDirectory" parameterClass="String" resultMap="LogMap">
+        <include refid="getInternal"/>
+        WHERE file_id = #fileId#
+    </select>
+
+</sqlMap>

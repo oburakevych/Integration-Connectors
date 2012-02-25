@@ -35,3 +35,15 @@ CREATE TABLE dropbox_directory (
   CONSTRAINT UNIQUE INDEX dropbox_dir_account_index (account_id, directory),
   INDEX dropbox_dir_locked_updated_index (locked_by)
 ) ENGINE=InnoDB;
+
+CREATE TABLE dropbox_file (
+  id VARCHAR(40) PRIMARY KEY,
+  directory_id VARCHAR(40) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  created TIMESTAMP NOT NULL,
+  status VARCHAR(20),
+  CONSTRAINT FOREIGN KEY 
+    dropbox_directory_id_fk (directory_id) 
+    REFERENCES dropbox_directory (id),
+  INDEX dropbox_dir_index (directory_id)
+) ENGINE=InnoDB;

@@ -2,9 +2,9 @@ package org.integration.connectors.dropbox.directory;
 
 public enum DropboxFileSystemDirectory {
     ROOT("/"),
-    INPROCESS(ROOT + "inprocess"),
-    SENT(ROOT + "sent"),
-    ERROR(ROOT + "error");
+    INPROCESS(ROOT.getPath() + "inprocess"),
+    SENT(ROOT.getPath() + "sent"),
+    ERROR(ROOT.getPath() + "error");
     
     private String path;
     

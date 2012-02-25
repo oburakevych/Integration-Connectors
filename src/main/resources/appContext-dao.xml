@@ -38,6 +38,10 @@
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
 	
+	<bean id="dropboxFileDao" class="org.integration.connectors.dropbox.files.impl.DropboxFileIbatisDao">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
 	<bean id="tradeshiftAccountDao" class="org.integration.connectors.tradeshift.account.impl.TradeshiftAccountIbatisDao">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
@@ -45,4 +49,9 @@
 	<bean id="tradeshiftSecurityDao" class="org.integration.connectors.tradeshift.security.TradeshiftSecurityIbatisDao">
 		<property name="sqlMapClient" ref="sqlMapClient"/>
 	</bean>
+	
+	<bean id="fileTransferLogDao" class="org.integration.connectors.log.impl.FileTransferLogIbatisDao">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
 </beans>

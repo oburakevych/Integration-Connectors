@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DropboxFile">
+    <typeAlias type="org.integration.connectors.file.File" alias="File" />
+
+    <resultMap id="FileMap" class="File">
+    	<result property="id" column="id" />
+        <result property="directoryId" column="directory_id" />
+        <result property="name" column="name" />
+        <result property="created" column="created" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <insert id="create" parameterClass="File">
+        INSERT INTO dropbox_file(id, directory_id, name, created, status) 
+							VALUES (#id#, #directoryId#, #name#, #created:TIMESTAMP#, #status#)
+    </insert>
+    
+	<update id="deleteById" parameterClass="String">
+		DELETE FROM dropbox_file WHERE id = #id#
+    </update>
+    
+    <sql id="getInternal">
+        SELECT * FROM dropbox_file
+    </sql>
+
+    <select id="getAll" resultMap="FileMap">
+        <include refid="getInternal"/>
+    </select>
+    
+    <select id="getById" parameterClass="String" resultMap="FileMap">
+    	<include refid="getInternal"/>
+        WHERE id = #id# 
+    </select>
+    
+	<select id="getByDirectory" parameterClass="String" resultMap="FileMap">
+        <include refid="getInternal"/>
+        WHERE directory_id = #directoryId#
+    </select>
+
+</sqlMap>

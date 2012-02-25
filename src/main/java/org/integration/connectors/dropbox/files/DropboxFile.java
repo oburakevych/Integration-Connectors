@@ -1,12 +1,18 @@
 package org.integration.connectors.dropbox.files;
 
-public class DropboxFile {
+import java.util.Date;
+import java.util.UUID;
+
+import org.integration.connectors.file.File;
+
+public class DropboxFile extends File {
     private byte[] contents = null;
     private Entry metadata = null;
     
     public DropboxFile() {}
     
     public DropboxFile(Entry metadata) {
+        super(UUID.randomUUID().toString(), null, new Date());
         this.metadata = metadata;
     }
     
@@ -26,7 +32,8 @@ public class DropboxFile {
         this.metadata = metadata;
     }
 
-    public String getFileName() {
+    @Override
+    public String getName() {
         return metadata.getName();
     }
 
