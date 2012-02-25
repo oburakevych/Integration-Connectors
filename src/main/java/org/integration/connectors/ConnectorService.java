@@ -18,9 +18,14 @@ public abstract class ConnectorService {
     protected abstract void pairTmpAccount(String masterAccountId, Account account);
     protected abstract void pairAccount(String masterAccountId, Account account);
     
-    public void transferDocumentFile(String companyAccountId, String fileId, String directory, String fileName, String mimeType, byte[] document) {
-        getTradeshiftApiService().putDocumentFile(companyAccountId, directory, fileName, mimeType, document);
-        logService.save(new FileTransferLog(fileId, "Transferred from Dropbox to Tradeshift"));
+    public void transferDocumentFile(String companyAccountId, String fileId, String directory, String fileName, String mimeType, byte[] document) throws Exception {
+        try {
+            getTradeshiftApiService().putDocumentFile(companyAccountId, directory, fileName, mimeType, document);
+            logService.save(new FileTransferLog(fileId, "Transferred from Dropbox to Tradeshift"));
+        } catch (Exception e) {
+            logService.save(new FileTransferLog(fileId, "Transfer from Dropbox to Tradeshift failed. " + e.getMessage()));
+            throw new Exception("Transfer of the file " + fileName + "for Account " + companyAccountId + " from Dropbox to Tradeshift failed.", e);
+        }
     }
     
     public void dispatchDocumentFile(String companyAccountId, String fileId, String directory, String fileName) {

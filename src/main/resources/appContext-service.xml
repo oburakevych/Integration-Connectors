@@ -16,8 +16,8 @@
 	<task:scheduler id="dropboxScheduler" pool-size="60"/>
      
 	<task:scheduled-tasks scheduler="dropboxScheduler">
-    	<task:scheduled ref="dropboxDirectoryScheduler" method="processRemote" fixed-rate="120000"/>
-    	<task:scheduled ref="dropboxDirectoryScheduler" method="processLocal" fixed-delay="100000"/>
+    	<task:scheduled ref="dropboxDirectoryScheduler" method="processRemote" fixed-rate="60000"/>
+    	<task:scheduled ref="dropboxDirectoryScheduler" method="processLocal" fixed-delay="20000"/>
 	</task:scheduled-tasks>
       
 	<bean id="dropboxDirectoryScheduler" class="org.integration.connectors.dropbox.directory.DropboxDirectoryCheckShceduler">

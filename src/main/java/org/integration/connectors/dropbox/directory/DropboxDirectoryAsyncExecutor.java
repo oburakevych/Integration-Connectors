@@ -38,31 +38,39 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
     @Async
     public void run(DropboxDirectory directory) {
         log.debug("A job will be run against directory {} for Account {}", directory.getId(), directory.getAccountId());
-        
-        Entry remoteDirEntry = run(directory.getAccountId(), directory.getName(), Boolean.FALSE);
-        
-        if (remoteDirEntry == null || remoteDirEntry.getContents() == null 
-                || remoteDirEntry.getContents().isEmpty()) {
-            log.warn("Directory {} is empty even though the hash has been modified to {}", directory.getId(), directory.getHash());
-            return;
-        }
-        
-        directory.setModified(DateUtils.parseEntryDate(remoteDirEntry.getModified()));
-        directory.setLastCheck(new Date());
-        
-        for(Entry file : remoteDirEntry.getContents()) {
-            log.debug("Processing entry {}", file.getName());
+        Entry remoteDirEntry = null;
+        try {
+            remoteDirEntry = run(directory.getAccountId(), directory.getName(), Boolean.FALSE);
             
-            if (file.isDir()) {
-                continue;
+            if (remoteDirEntry == null) {
+                //TODO: create a new type of exception
+                throw new Exception("Could not find any files in the updated direcotry");
             }
             
-            processFile(directory, file);
+            if (remoteDirEntry.getContents() != null && !remoteDirEntry.getContents().isEmpty()) {
+                directory.setModified(DateUtils.parseEntryDate(remoteDirEntry.getModified()));
+                directory.setLastCheck(new Date());
+                
+                for(Entry file : remoteDirEntry.getContents()) {
+                    log.debug("Processing entry {}", file.getName());
+                    
+                    if (file.isDir()) {
+                        continue;
+                    }
+                    
+                    processFile(directory, file);
+                }
+            } else {
+                log.warn("Directory {} is empty even though the hash has been modified to {}", directory.getId(), directory.getHash());
+            }
+            
+            directory.setHash(remoteDirEntry.getHash());
+            directory.setUpdated(false);
+        } catch(Exception e) {
+            log.error("Echeption processing directory " + directory, e);
         }
 
         directory.setLastProcessed(new Date());
-        directory.setHash(remoteDirEntry.getHash());
-        directory.setUpdated(false);
         directory.unlock();
         
         directoryService.save(directory);
@@ -107,7 +115,7 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
         }
     }
     
-    protected void processFile(DropboxDirectory directory, Entry file) {
+    protected void processFile(DropboxDirectory directory, Entry file) throws Exception {
         log.debug("Processing file {}", file.getPath());
         try {
             DropboxFile df = fileService.getFile(directory, file.getPath());            
@@ -125,14 +133,16 @@ public class DropboxDirectoryAsyncExecutor implements DirectoryExecutor {
             log.debug("File {} has been dispatched, starting an async process to handle dispatch status", df.getName());
             
             dispatchResultAsyncExecutor.process(directory.getAccountId(), df);
+            log.debug("Dispatch has been issued to Tradeshift for the file {}", file.getPath());
         } catch (Exception e) {
             log.error("Exception processing file " + file.getPath() + " for Account " + directory.getAccountId(), e);
             //TODO: save entry and the error into the DB to email/show it to the user
+            throw new Exception("Exception processing file " + file.getPath() + " for Account " + directory.getAccountId());
         }
             
     }
     
-    protected void dispatch(String accountId, DropboxFile file) {
+    protected void dispatch(String accountId, DropboxFile file) throws Exception {
         tradeshiftService.transferDocumentFile(accountId, file.getId(), TS_DIR, file.getName(), file.getMimeType(), file.getContents());
         tradeshiftService.dispatchDocumentFile(accountId, file.getId(), TS_DIR, file.getName());
     }
