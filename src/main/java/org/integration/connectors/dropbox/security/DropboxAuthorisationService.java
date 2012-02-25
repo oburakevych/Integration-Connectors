@@ -19,7 +19,7 @@ public class DropboxAuthorisationService implements SecurityService {
         return oauthManager.buildAuthorizeUrl(companyAccountId);
     }
     
-    public void requestAccessToken(String companyAccountId) {
+    public void requestAccessToken(String companyAccountId) throws Exception {
         oauthManager.getAccessToken(companyAccountId);
     }
     

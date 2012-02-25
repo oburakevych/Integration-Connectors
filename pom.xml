@@ -104,9 +104,9 @@
 	                        <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
 	                            <port>8892</port>
 	                            <maxIdleTime>60000</maxIdleTime>
-	                            <keystore>${basedir}/deployment/jetty/polling_keystore.jks</keystore>
-	                            <password>jetty7</password>
-	                            <keyPassword>jetty7</keyPassword>
+	                            <keystore>${basedir}/deployment/jetty/dropbox-connector.jks</keystore>
+	                            <password>123456789</password>
+	                            <keyPassword>123456789</keyPassword>
 	                        </connector>
 	                    </connectors>
 	                    <contextPath>/</contextPath>

@@ -116,6 +116,8 @@
         <constructor-arg name="requestTokenStorage" ref="dropboxRequestTokenStorage" />
         <constructor-arg name="credentialsStorage" ref="dropboxCredentialsStorage" />
         <constructor-arg name="serviceProvider" ref="ws.dropbox.serviceProvicer" />
+        <constructor-arg name="appUrl" value="${tradeshift.app.url}"/>
+        <property name="accountService" ref="dropboxAccountService"/>
     </bean>
 
     <bean id="ws.dropbox.restOperations" class="org.springframework.web.client.RestTemplate">
