@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>Payments Server API</display-name>
+    <display-name>Integrails Connectors</display-name>
 
     <session-config>
         <session-timeout>5</session-timeout>
@@ -17,7 +17,7 @@
     </context-param>
     <context-param>
         <param-name>webAppRootKey</param-name>
-        <param-value>payments-server-api</param-value>
+        <param-value>connectors</param-value>
     </context-param>
     <!--
     <context-param>
@@ -80,12 +80,12 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>httpMethodFilter</filter-name>
-        <servlet-name>paymentsServerApi</servlet-name>
+        <servlet-name>connectors</servlet-name>
     </filter-mapping>
 
     <!-- ### Servlets ### -->
     <servlet>
-        <servlet-name>paymentsServerApi</servlet-name>
+        <servlet-name>connectors</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
@@ -107,7 +107,7 @@
     and is not routed to the DispatcherServlet
     -->
     <servlet-mapping>
-        <servlet-name>paymentsServerApi</servlet-name>
+        <servlet-name>connectors</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>

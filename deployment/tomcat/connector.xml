@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context docBase="/PATH_TO_WAR_DIR/payments-service-X.X.X.war">
+<Context docBase="/PATH_TO_WAR_DIR/connectors-X.X.X.war">
     <Resource
         name="configurationFactory"
         type="org.apache.commons.configuration.ConfigurationFactory"

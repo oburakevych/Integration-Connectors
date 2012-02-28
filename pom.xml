@@ -6,7 +6,7 @@
     <groupId>org.integration.connectors</groupId>
     <name>Connector-Service</name>
     <version>1.0-SNAPSHOT</version>
-    <artifactId>connector</artifactId>
+    <artifactId>connectors</artifactId>
     <packaging>war</packaging>
 
     <url>http://maven.apache.org</url>
@@ -90,21 +90,23 @@
                         </archive>
                     </configuration>
                 </plugin>
-	        <plugin>
-                    <!-- Read about configuration here: http://wiki.eclipse.org/Jetty/Feature/Jetty_Maven_Plugin  -->
+	        	<plugin>
+	                   <!-- Read about configuration here: http://wiki.eclipse.org/Jetty/Feature/Jetty_Maven_Plugin  -->
 	                <groupId>org.mortbay.jetty</groupId>
 	                <artifactId>jetty-maven-plugin</artifactId>
 	                <version>8.0.4.v20111024</version>
-	                <configuration>
-	                    <connectors>
+		            <configuration>
+						<connectors>
+							 
 	                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
 	                            <port>8180</port>
 	                            <maxIdleTime>60000</maxIdleTime>
 	                        </connector>
+	                         
 	                        <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-	                            <port>8892</port>
+	                            <port>8893</port>
 	                            <maxIdleTime>60000</maxIdleTime>
-	                            <keystore>${basedir}/deployment/jetty/dropbox-connector.jks</keystore>
+	                            <keystore>${basedir}/deployment/jetty/connectors.jks</keystore>
 	                            <password>123456789</password>
 	                            <keyPassword>123456789</keyPassword>
 	                        </connector>
@@ -124,11 +126,11 @@
 				</plugin>
 				<plugin>
 					<!-- Read about configuration here: http://tomcat.apache.org/maven-plugin-2.0-SNAPSHOT/index.html -->
-          			<groupId>org.apache.tomcat.maven</groupId>
-          			<artifactId>tomcat7-maven-plugin</artifactId>
-          			<version>2.0-SNAPSHOT</version>
-        		</plugin>
-            </plugins>
+	       			<groupId>org.apache.tomcat.maven</groupId>
+	       			<artifactId>tomcat7-maven-plugin</artifactId>
+	       			<version>2.0-SNAPSHOT</version>
+	       		</plugin>
+	        </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
