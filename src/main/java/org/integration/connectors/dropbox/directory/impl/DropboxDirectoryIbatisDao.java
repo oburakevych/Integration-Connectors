@@ -50,7 +50,11 @@ public class DropboxDirectoryIbatisDao extends SqlMapClientDaoSupport implements
     @SuppressWarnings("unchecked")
     @Override
     public List<DropboxDirectory> getDirectories(int limit) {
-        return getSqlMapClientTemplate().queryForList(ST_GET_ALL, 0, limit);
+        if (limit == -1) {
+            return getSqlMapClientTemplate().queryForList(ST_GET_ALL);
+        } else {
+            return getSqlMapClientTemplate().queryForList(ST_GET_ALL, 0, limit);    
+        }
     }
 
     @SuppressWarnings("unchecked")

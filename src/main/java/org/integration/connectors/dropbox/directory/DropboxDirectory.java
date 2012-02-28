@@ -73,6 +73,11 @@ public class DropboxDirectory {
     public void setUpdated(boolean isUpdated) {
         this.isUpdated = isUpdated;
     }
+    
+    // To support JSTL views
+    public boolean getIsUpdated() {
+        return isUpdated;
+    }
 
     public void setLastCheck(Date lastCheck) {
         this.lastCheck = lastCheck;
