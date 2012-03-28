@@ -14,9 +14,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.integration.connectors.dropbox.account.DropboxAccount;
+import org.integration.connectors.dropbox.exception.DropboxException;
+import org.integration.connectors.dropbox.exception.DropboxUnlinkedException;
 import org.integration.connectors.dropbox.files.DropboxFile;
 import org.integration.connectors.dropbox.files.Entry;
 import org.integration.connectors.dropbox.ws.DropboxApiService;
+import org.integration.connectors.dropbox.ws.DropboxExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -27,7 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestOperations;
 
-public class DropboxApiServiceImpl implements DropboxApiService {
+public class DropboxApiServiceImpl extends DropboxExceptionHandler implements DropboxApiService {
 	private static final List<Charset> ACCEPTABLE_CHARSETS = Arrays.asList(Charset.forName(DEFAULT_CHARSET));
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
@@ -64,7 +67,7 @@ public class DropboxApiServiceImpl implements DropboxApiService {
     }
 
     @Override
-    public Entry getMetadataEntry(String companyAccountId, String root, String path) {
+    public Entry getMetadataEntry(String companyAccountId, String root, String path) throws DropboxException {
         Map<String, String> headers = new HashMap<String, String>(defultRequestHeaders);
         
         headers.put(TENANTID_HEADER_NAME, companyAccountId.toString());
@@ -74,6 +77,8 @@ public class DropboxApiServiceImpl implements DropboxApiService {
         
         ResponseEntity<Entry> responseEntity = this.restOperations.exchange(apiBaseUrl + "metadata/{root}/{path}", HttpMethod.GET, requestEntity, Entry.class, root, encode(path));
 
+        handleResponse(responseEntity);
+        
         return responseEntity.getBody();
     }
     

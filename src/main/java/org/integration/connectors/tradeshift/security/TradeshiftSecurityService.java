@@ -42,4 +42,9 @@ public class TradeshiftSecurityService implements SecurityService {
     public boolean exists(String accountId) {
         return creadentialStorage.exists(accountId);
     }
+
+    @Override
+    public boolean isActive(String accountId) {
+        return exists(accountId);
+    }
 }

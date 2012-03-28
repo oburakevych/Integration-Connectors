@@ -89,7 +89,18 @@ public class TradeshiftOAuth1ManagerRequestInterceptor implements ClientHttpRequ
 
 		protectedResourceRequest.getHeaders().add("Authorization", authorizationHeaderValue);
 
-		return execution.execute(protectedResourceRequest, body);
+		ClientHttpResponse response = execution.execute(protectedResourceRequest, body);
+		
+		//TODO: handle response
+		switch (response.getStatusCode()) {
+        case UNAUTHORIZED:
+            log.warn(response.getStatusText());
+            break;
 
+        default:
+            break;
+        }
+		
+		return response;
 	}
 }

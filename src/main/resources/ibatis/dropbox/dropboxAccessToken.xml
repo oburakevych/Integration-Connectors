@@ -32,12 +32,23 @@
     </update>
     
     <sql id="getInternal">
-        SELECT * FROM dropbox_access_token
+        SELECT dat.* FROM dropbox_access_token dat
     </sql>
     
-    <select id="get" parameterClass="String" resultMap="DropboxAccessTokenMap" cacheModel="DropboxAccessTokenCache">
+	<sql id="getInternalJointWithAccount">
         <include refid="getInternal"/>
-        WHERE account_id = #accountId#
+  			INNER JOIN dropbox_account da on da.id = dat.account_id
+		WHERE da.deactivated IS NULL
+    </sql>
+    
+    <select id="getActive" parameterClass="String" resultMap="DropboxAccessTokenMap">
+        <include refid="getInternalJointWithAccount"/>
+        AND dat.account_id = #accountId#
+    </select>
+    
+	<select id="get" parameterClass="String" resultMap="DropboxAccessTokenMap">
+        <include refid="getInternal"/>
+        WHERE dat.account_id = #accountId#
     </select>
 
     <select id="getAll" resultClass="java.lang.String">

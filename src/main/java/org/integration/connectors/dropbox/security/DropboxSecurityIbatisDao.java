@@ -10,6 +10,7 @@ public class DropboxSecurityIbatisDao extends SqlMapClientDaoSupport implements 
     // prefix `ST` means statement.
     private static final String ST_CREATE = NAMESPACE_FLAG + ".create";
     private static final String ST_UPDATE = NAMESPACE_FLAG + ".update";
+    private static final String ST_GET_BY_ACTIVE_ACCOUNT_ID = NAMESPACE_FLAG + ".getActive";
     private static final String ST_GET_BY_ACCOUNT_ID = NAMESPACE_FLAG + ".get";
     private static final String ST_DELETE = NAMESPACE_FLAG + ".delete";
 
@@ -26,6 +27,11 @@ public class DropboxSecurityIbatisDao extends SqlMapClientDaoSupport implements 
     public void update(String accountId, AccessToken credentials) {
         getSqlMapClientTemplate().update(ST_UPDATE, credentials);
     }
+    
+    @Override
+    public AccessToken getActive(String accountId) {
+        return (AccessToken) getSqlMapClientTemplate().queryForObject(ST_GET_BY_ACTIVE_ACCOUNT_ID, accountId);
+    }
 
     @Override
     public AccessToken get(String accountId) {
@@ -35,6 +41,11 @@ public class DropboxSecurityIbatisDao extends SqlMapClientDaoSupport implements 
     @Override
     public void delete(String accountId) {
         getSqlMapClientTemplate().delete(ST_DELETE, accountId);
+    }
+    
+    @Override
+    public boolean isActive(String accountId) {
+        return getActive(accountId) != null;
     }
 
     @Override

@@ -2,7 +2,10 @@ package org.integration.connectors.dropbox.files;
 
 import java.util.List;
 
+import org.integration.connectors.dropbox.account.DropboxAccountService;
 import org.integration.connectors.dropbox.directory.DropboxDirectory;
+import org.integration.connectors.dropbox.exception.DropboxException;
+import org.integration.connectors.dropbox.exception.DropboxUnlinkedException;
 import org.integration.connectors.dropbox.ws.DropboxApiService;
 import org.integration.connectors.file.File;
 import org.integration.connectors.file.FileDao;
@@ -13,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class DropboxFileService {
     protected Logger log = LoggerFactory.getLogger(this.getClass());
     
+    private DropboxAccountService accountService;
     private DropboxApiService apiService;
     private FileTransferLogService logService;
     private FileDao fileDao;
@@ -23,9 +27,21 @@ public class DropboxFileService {
         this.fileDao = fileDao;
     }
     
-    public Entry getMetadataEntry(String companyAccountId, String path) {
-        log.debug("Getting metadata for Account {} at location: {}", companyAccountId, root + "/" + path);
-        Entry fileEntry = apiService.getMetadataEntry(companyAccountId, root, path);
+    public Entry getMetadataEntry(String accountId, String path) {
+        log.debug("Getting metadata for Account {} at location: {}", accountId, root + "/" + path);
+        Entry fileEntry = null;
+        
+        try {
+            fileEntry = apiService.getMetadataEntry(accountId, root, path);
+        } catch (DropboxUnlinkedException e) {
+            log.warn("Dropbox Account has been unlinked. Disabling the Account {}", accountId);
+            // TODO: add audit log
+            accountService.disable(accountId);
+        } catch (DropboxException e) {
+            log.error("Unknown Dropbox Exception", e);
+            
+            throw new RuntimeException(e);
+        }
         
         log.debug("File entry received at {} having hash {}", fileEntry.getPath(), fileEntry.getHash());
         
@@ -114,5 +130,13 @@ public class DropboxFileService {
 
     public FileTransferLogService getLogService() {
         return logService;
+    }
+
+    public DropboxAccountService getAccountService() {
+        return accountService;
+    }
+
+    public void setAccountService(DropboxAccountService accountService) {
+        this.accountService = accountService;
     }
 }

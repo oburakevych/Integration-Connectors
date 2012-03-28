@@ -36,5 +36,13 @@
 
     <select id="getAccounts" resultMap="DropboxAccountMap">
         <include refid="getInternal"/>
+        WHERE deactivated IS NULL
     </select>
+    
+    <update id="disable" parameterClass="String">
+        UPDATE dropbox_account
+        SET deactivated = NOW()
+        WHERE id = #accountId#
+    </update>
+    
 </sqlMap>

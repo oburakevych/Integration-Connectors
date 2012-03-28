@@ -14,6 +14,7 @@ public class DropboxAccountIbatisDao extends SqlMapClientDaoSupport implements D
     private static final String ST_UPDATE = NAMESPACE_FLAG + ".update";
     private static final String ST_GET_ACCOUNT = NAMESPACE_FLAG + ".getAccount";
     private static final String ST_GET_ACCOUNTS = NAMESPACE_FLAG + ".getAccounts";
+    private static final String ST_DISABLE_ACCOUNT = NAMESPACE_FLAG + ".disable";
     
     @Override
     public void save(DropboxAccount account) {
@@ -24,6 +25,7 @@ public class DropboxAccountIbatisDao extends SqlMapClientDaoSupport implements D
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<DropboxAccount> getAccounts(int limit) {
         return getSqlMapClientTemplate().queryForList(ST_GET_ACCOUNTS, 0, limit);
@@ -42,6 +44,11 @@ public class DropboxAccountIbatisDao extends SqlMapClientDaoSupport implements D
     @Override
     public boolean exists(String accountId) {
         return getAccount(accountId) != null;
+    }
+
+    @Override
+    public void disable(String accountId) {
+        getSqlMapClientTemplate().update(ST_DISABLE_ACCOUNT, accountId);
     }
 
 }

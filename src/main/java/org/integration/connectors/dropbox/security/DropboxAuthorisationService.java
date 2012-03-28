@@ -47,6 +47,11 @@ public class DropboxAuthorisationService implements SecurityService {
     public boolean exists(String accountId) {
         return oauthManager.getCredentialsStorage().exists(accountId);
     }
+    
+    @Override
+    public boolean isActive(String accountId) {
+        return oauthManager.getCredentialsStorage().isActive(accountId);
+    }
 
     public DropboxOAuth1AuthorizationManager getOauthManager() {
         return oauthManager;

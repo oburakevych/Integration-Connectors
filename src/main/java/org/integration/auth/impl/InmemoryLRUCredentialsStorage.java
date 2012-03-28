@@ -77,4 +77,14 @@ public class InmemoryLRUCredentialsStorage<T> implements CredentialsStorage<T> {
     public T resendAndGet(String uuid) {
         return get(uuid);
     }
+
+    @Override
+    public T getActive(String uuid) {
+        return get(uuid);
+    }
+
+    @Override
+    public boolean isActive(String uuid) {
+        return exists(uuid);
+    }
 }

@@ -8,4 +8,5 @@ public interface DropboxAccountDao {
     DropboxAccount getAccount(String id);
     List<DropboxAccount> getAccounts(int limit);
     boolean exists(String accountId);
+    void disable(String accountId);
 }

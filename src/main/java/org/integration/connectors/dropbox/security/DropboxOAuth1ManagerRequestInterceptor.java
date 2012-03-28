@@ -35,7 +35,6 @@ oauth_timestamp="1319235492"
 1 > 
  */
 public class DropboxOAuth1ManagerRequestInterceptor implements ClientHttpRequestInterceptor {
-
 	private final SigningSupportVs signingUtils = new SigningSupportVs();
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
@@ -61,9 +60,10 @@ public class DropboxOAuth1ManagerRequestInterceptor implements ClientHttpRequest
 
 		String accessToken = null;
 		String accessTokenSecret = null;
+		String tenantId = null;
 
 		if (CollectionUtils.isNotEmpty(tenatIdHeaders)) {
-			String tenantId = tenatIdHeaders.iterator().next();
+			tenantId = tenatIdHeaders.iterator().next();
 
 			AccessToken accessCredentials = credentialsStorage.get(tenantId);
 
@@ -84,6 +84,6 @@ public class DropboxOAuth1ManagerRequestInterceptor implements ClientHttpRequest
 		protectedResourceRequest.getHeaders().add("Authorization", authorizationHeaderValue);
 
 		return execution.execute(protectedResourceRequest, body);
-
 	}
+
 }

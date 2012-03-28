@@ -3,7 +3,7 @@ use `connector`;
 CREATE TABLE dropbox_account (
   id VARCHAR(40) NOT NULL PRIMARY KEY,
   created TIMESTAMP NOT NULL,
-  deactivated TIMESTAMP,
+  deactivated TIMESTAMP NULL,
   name VARCHAR(255),
   email VARCHAR(255),
   country VARCHAR(20),

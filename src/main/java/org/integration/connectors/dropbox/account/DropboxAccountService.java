@@ -39,4 +39,9 @@ public class DropboxAccountService {
         log.debug("Getting the list of all available Dropbox accounts limited to {} entries", limit);
         return accountDao.getAccounts(limit);
     }
+    
+    public void disable(String accountId) {
+        log.debug("Disabling account {}", accountId);
+        accountDao.disable(accountId);
+    }
 }

@@ -5,5 +5,6 @@ public interface SecurityService {
     void update(String accountId, AccessToken credentials);
     AccessToken get(String accountId);
     void delete(String accountId);
+    boolean isActive(String accountId);
     boolean exists(String accountId);
 }

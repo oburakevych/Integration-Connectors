@@ -15,7 +15,7 @@
 		
 		<c:if test="${size > 0}">
 	        <div style="margin-top: 40px;">
-	            <table width="80%" border="1" style="font-size: 12px; margin-left:auto; margin-right:auto;">
+	            <table width="80%" border="1px;" style="font-size: 12px; margin-left:auto; margin-right:auto;">
 	                <tr>
 	                    <th>ID</th>
 	                    <th width="228px;">Account ID</th>

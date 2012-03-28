@@ -48,7 +48,7 @@ public class DropboxAccountServiceTest {
         assertEquals(account.getId(), savedAccount.getId());
         assertEquals(account.getName(), savedAccount.getName());
         assertNotNull(savedAccount.getCreated());
-        //assertNull(savedAccount.getDeactivated());
+        assertNull(savedAccount.getDeactivated());
     }
     
     private DropboxAccount makeAccount() {

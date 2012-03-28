@@ -19,7 +19,7 @@ public class DBOAuth1AccessCredentialsStorage implements CredentialsStorage<Acce
 
     @Override
     public AccessToken get(String uuid) {
-        AccessToken credentials = securityDao.get(uuid);
+        AccessToken credentials = securityDao.getActive(uuid);
 
         log.trace("Retrivied credentials:[uuid: {}, credentials: {}]", uuid, credentials);
         
@@ -47,5 +47,15 @@ public class DBOAuth1AccessCredentialsStorage implements CredentialsStorage<Acce
     @Override
     public AccessToken resendAndGet(String uuid) {
         return get(uuid);
+    }
+
+    @Override
+    public AccessToken getActive(String uuid) {
+        return securityDao.getActive(uuid);
+    }
+
+    @Override
+    public boolean isActive(String uuid) {
+        return securityDao.isActive(uuid);
     }
 }

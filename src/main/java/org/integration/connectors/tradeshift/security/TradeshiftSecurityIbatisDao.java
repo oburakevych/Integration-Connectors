@@ -41,4 +41,16 @@ public class TradeshiftSecurityIbatisDao extends SqlMapClientDaoSupport implemen
     public boolean exists(String accountId) {
         return get(accountId) != null;
     }
+
+    @Override
+    public AccessToken getActive(String accountId) {
+        // TODO Auto-generated method stub
+        return get(accountId);
+    }
+
+    @Override
+    public boolean isActive(String accountId) {
+        // TODO Auto-generated method stub
+        return exists(accountId);
+    }
 }
